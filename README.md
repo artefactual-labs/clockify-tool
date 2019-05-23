@@ -18,6 +18,13 @@ entries, however, will preserve their start time. The ability to specify a
 start time when creating a time entry will be added if needed.
 
 
+Known issues
+------------
+
+* Probably doesn't work with Python 3.x
+* Will need to be tweaked to handle Unicode
+
+
 Installation
 ------------
 
