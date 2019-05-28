@@ -245,6 +245,12 @@ For example:
     * Client-Project-Task Workspace [4c31a29da059321c02e301e0]
 
 
+## Cache status/flushing
+
+The `cache` command is used to display how many time entries have been cached.
+The `--flush` (or `-f`) flag can be used to delete all cached time entries.
+
+
 Advanced configuration
 ----------------------
 
