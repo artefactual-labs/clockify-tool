@@ -71,27 +71,27 @@ def update_entry(args, config, app_data):
         return
 
     # Change TimeEntrySummaryDto to work as UpdateTimeEntryRequest format (see Clockify API documentation)
-    entry = {}
-    entry['id'] = cached_entry['id']
-    entry['description'] = cached_entry['description']
-    entry['start'] = cached_entry['timeInterval']['start']
-    entry['end'] = cached_entry['timeInterval']['end']
-    entry['projectId'] = cached_entry['project']['id']
-    entry['billable'] = cached_entry['billable']
-    entry['tagIds'] = []
+    updated_entry = {}
+    updated_entry['id'] = cached_entry['id']
+    updated_entry['description'] = cached_entry['description']
+    updated_entry['start'] = cached_entry['timeInterval']['start']
+    updated_entry['end'] = cached_entry['timeInterval']['end']
+    updated_entry['projectId'] = cached_entry['project']['id']
+    updated_entry['billable'] = cached_entry['billable']
+    updated_entry['tagIds'] = []
 
     if 'task' in cached_entry and cached_entry['task']:
-        entry['taskId'] = cached_entry['task']['id']
+        updated_entry['taskId'] = cached_entry['task']['id']
 
     if 'tags' in cached_entry and cached_entry['tags']:
         for tag in cached_entry['tags']:
-            entry['tagIds'].append(tag['id'])
+            updated_entry['tagIds'].append(tag['id'])
 
     # Update description, if necessary
-    if args.comments and args.comments != entry['description']:
+    if args.comments and args.comments != updated_entry['description']:
         changed = True
 
-        entry['description'] = args.comments
+        updated_entry['description'] = args.comments
         cached_entry['description'] = args.comments
         print('Changing comments to: ' + args.comments)
 
@@ -115,28 +115,28 @@ def update_entry(args, config, app_data):
     # Change UTC start date/time, if necessary
     if args.date:
         # Convert entry date to simple sting in local timezone
-        original_date_localized = dateutil.parser.parse(entry['start']).astimezone(app_data['clockify'].tz)
+        original_date_localized = dateutil.parser.parse(updated_entry['start']).astimezone(app_data['clockify'].tz)
         original_date = original_date_localized.strftime('%Y-%m-%d')
 
         if original_date != args.date:
             changed = True
 
             # Convert new date to UTC ISO 8601
-            entry['start'] = app_data['clockify'].local_date_string_to_utc_iso_8601(args.date)
-            cached_entry['timeInterval']['start'] = entry['start']
+            updated_entry['start'] = app_data['clockify'].local_date_string_to_utc_iso_8601(args.date)
+            cached_entry['timeInterval']['start'] = updated_entry['start']
 
             print('Changing activies from ' + original_date + ' to ' + args.date)
 
     # Convert UTC start/time to localized datetime and use it to calculate ISO 8601 end date/time
-    start_datetime = dateutil.parser.parse(entry['start'])
-    entry['end'] = app_data['clockify'].add_hours_to_localized_datetime_and_convert_to_iso_8601(start_datetime, current_hours)
+    start_datetime = dateutil.parser.parse(updated_entry['start'])
+    updated_entry['end'] = app_data['clockify'].add_hours_to_localized_datetime_and_convert_to_iso_8601(start_datetime, current_hours)
 
-    cached_entry['timeInterval']['duration'] = isodate.duration_isoformat(dateutil.parser.parse(entry['end']) - dateutil.parser.parse(entry['start']))
-    cached_entry['timeInterval']['end'] = entry['end']
+    cached_entry['timeInterval']['duration'] = isodate.duration_isoformat(dateutil.parser.parse(updated_entry['end']) - dateutil.parser.parse(updated_entry['start']))
+    cached_entry['timeInterval']['end'] = updated_entry['end']
 
     if changed:
         # Perform update via API
-        response = app_data['clockify'].update_entry(entry)
+        response = app_data['clockify'].update_entry(updated_entry)
 
         if response.status_code == 200:
             helpers.write_cache_entry(cached_entry)
