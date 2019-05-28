@@ -234,7 +234,7 @@ Here's an example (in which `5cd64137b079870300a9c9e0` is the time entry ID:
     $ ./cft delete 5cd64137b079870300a9c9e0
 
 
-## List workspaces
+### List workspaces
 
 The `workspaces` (or `w`) command is used to list workspaces. The workspace
 name and ID will be output.
@@ -245,10 +245,11 @@ For example:
     * Client-Project-Task Workspace [4c31a29da059321c02e301e0]
 
 
-## Cache status/flushing
+### Cache status/flushing
 
-The `cache` command is used to display how many time entries have been cached.
-The `--flush` (or `-f`) flag can be used to delete all cached time entries.
+You probably won't need to use this, but it exists. The `cache` command is used
+to display how many time entries have been cached. The `--flush` (or `-f`) flag
+can be used to delete all cached time entries.
 
 
 Advanced configuration
