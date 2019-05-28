@@ -1,7 +1,7 @@
 # clockify-tool
 
 The Clockify Tool (`cft`) can be used to list, create, and delete time entries in
-Clockify. Tested with Python 2.7.
+Clockify. Tested with Python 2.7 and 3.
 
 Clockify's API requires that all important details about a time entry be
 provided when making a change to a time entry. Because of this `cft`, when
@@ -21,7 +21,6 @@ start time when creating a time entry will be added if needed.
 Known issues
 ------------
 
-* Probably doesn't work with Python 3.x
 * Will need to be tweaked to handle Unicode
 
 
