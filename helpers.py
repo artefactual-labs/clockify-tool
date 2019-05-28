@@ -45,7 +45,7 @@ def time_entry_list(from_date, to_date, clockify):
 def entry_bullet_point(entry):
     item = '* {}'.format(entry['description'])
 
-    if 'project' in entry:
+    if 'project' in entry and 'name' in entry['project']:
         item = item + ' ({}: {})'.format(entry['project']['name'], entry['project']['id'])
 
     hours = iso_duration_to_hours(entry['timeInterval']['duration'])

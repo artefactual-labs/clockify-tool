@@ -57,6 +57,15 @@ def new_entry(args, config, app_data):
 
     print(helpers.entry_bullet_point(entry))
 
+    cached_entry = entry
+    cached_entry['project'] = {'id': entry['projectId']}
+    del cached_entry['projectId']
+    cached_entry['tags'] = None
+    del cached_entry['tagIds']
+    cached_entry['task'] = None
+    del cached_entry['taskId']
+    helpers.write_cache_entry(cached_entry)
+
     print("Time entry created.")
 
 
