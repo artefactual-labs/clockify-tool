@@ -75,6 +75,11 @@ def arg_parser():
     parser_projects = subparsers.add_parser('projects', help='List projects')
     parser_projects.set_defaults(func='list_projects')
 
+    # Cache command
+    parser_cache = subparsers.add_parser('cache', help='Cache status/management')
+    parser_cache.add_argument('-f', '--flush', action='store_true')
+    parser_cache.set_defaults(func='cache_statistics')
+
     return parser
 
 

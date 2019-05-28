@@ -1,5 +1,7 @@
 from __future__ import print_function
 from datetime import date
+import shutil
+import os
 import dateutil
 import isodate
 import helpers
@@ -162,3 +164,19 @@ def list_workspaces(args, config, app_data):
 def list_projects(args, config, app_data):
     for project in app_data['clockify'].projects():
         print('* {} [{}]'.format(project['name'].encode('utf-8'), project['id']))
+
+
+def cache_statistics(args, config, app_data):
+    cache_dir = os.path.join(helpers.get_cache_directory())
+    cache_entries = 0
+
+    cache_files = [f for f in os.listdir(cache_dir) if os.path.isfile(os.path.join(cache_dir, f))]
+
+    if (len(cache_files)):
+        print('Cached time entries: {}'.format(str(len(cache_files))))
+
+        if 'flush' in args and args.flush:
+            print('Cache flushed.')
+            shutil.rmtree(cache_dir)
+    else:
+        print('Cache is empty.')
