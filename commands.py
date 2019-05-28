@@ -161,8 +161,18 @@ def update_entry(args, config, app_data):
 
 
 def delete_entry(args, config, app_data):
-    app_data['clockify'].delete_entry(args.id)
-    print('Time entry deleted.')
+    response = app_data['clockify'].delete_entry(args.id)
+
+    if response.status_code == 204:
+
+        cache_filepath = helpers.get_cache_filepath(args.id)
+
+        if os.path.isfile(cache_filepath):
+            os.remove(cache_filepath)
+
+        print('Time entry deleted.')
+    else:
+        print('Time entry not found.')
 
 
 def list_workspaces(args, config, app_data):
