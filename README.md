@@ -1,13 +1,20 @@
 # clockify-tool
 
-The Clockify Tool (`cft`) can be used to list, create, and delete time entries in
-Clockify. Tested with Python 2.7 and 3.
+The Clockify Tool (`cft`) can be used to list, create, and delete time entries
+in Clockify.
 
-Clockify's API requires that all important details about a time entry be
-provided when making a change to a time entry. Because of this `cft`, when
-your list time entries, caches these details. Given this if you list time
-entries in `cft`, change one of the listed time entries using Clockify's web
-UI, then change the same time entry using `cft` you'd lose the changes you
+With `cft` you can make use of time entry "templates" (see `Advanced
+configuration`) to rapidly create time entries. For example if you regularly
+have a 15 minute scrum meeting you could create a "scrum" time entry template
+that allows you to add a time entry like this:
+
+    $ ./cft +scrum
+
+Clockify's API, however, requires that all important details about a time entry
+be provided when making a change to a time entry. Because of this `cft`, when
+you list or create time entries, caches these details. Given this if you list
+time entries in `cft`, change one of the listed time entries using Clockify's
+web UI, then change the same time entry using `cft` you'd lose the changes you
 make in the web UI. For this reason it's advised to stick to `cft` for time
 entry if you want to use `cft`. You can still safely use the web UI for
 searching, etc.
@@ -16,6 +23,8 @@ Also note that `cft` isn't concerned about start time. Start time, when adding
 a time entry via `cft`, will always be midnight. Updating existing time
 entries, however, will preserve their start time. The ability to specify a
 start time when creating a time entry will be added if needed.
+
+Tested with Python 2.7 and 3.
 
 
 Known issues
