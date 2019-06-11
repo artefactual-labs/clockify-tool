@@ -15,7 +15,7 @@ PERIODS = {
 }
 
 
-def time_entry_list(from_date, to_date, clockify):
+def time_entry_list(from_date, to_date, clockify, verbose=False):
     print("Fetching time entries from {} to {}...".format(from_date, to_date))
     print()
 
@@ -32,7 +32,7 @@ def time_entry_list(from_date, to_date, clockify):
             # Cache entry in case user wants to update event
             write_cache_entry(entry)
 
-            report += entry_bullet_point(entry)
+            report += entry_bullet_point(entry, verbose)
             sum += iso_duration_to_hours(entry['timeInterval']['duration'])
 
         report += "\n" + str(sum) + " hours.\n"
@@ -42,8 +42,13 @@ def time_entry_list(from_date, to_date, clockify):
     print(report)
 
 
-def entry_bullet_point(entry):
-    item = '* {}'.format(entry['description'])
+def entry_bullet_point(entry, verbose=False):
+    item = '* '
+
+    if verbose:
+        item += '{} - '.format(entry['timeInterval']['start'])
+
+    item += '{}'.format(entry['description'])
 
     if 'project' in entry and 'name' in entry['project']:
         item = item + ' ({}: {})'.format(entry['project']['name'], entry['project']['id'])

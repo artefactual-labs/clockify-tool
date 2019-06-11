@@ -60,6 +60,7 @@ def arg_parser():
     parser_list.add_argument('period', nargs='?', metavar='period', help='time period: optional, overrides -s and -e')
     parser_list.add_argument('-s', '--start', metavar='start date', action='store')
     parser_list.add_argument('-e', '--end', metavar='end date', action='store')
+    parser_list.add_argument('-v', '--verbose', action='store_true')
     parser_list.set_defaults(func='list_entries')
 
     # Delete command
