@@ -19,8 +19,9 @@ make in the web UI. For this reason it's advised to stick to `cft` for time
 entry if you want to use `cft`. You can still safely use the web UI for
 searching, etc.
 
-Also note that `cft` isn't concerned about start time. Start time, when adding
-a time entry via `cft`, will always be midnight. Updating existing time
+Also note that `cft` isn't too concerned about start time. Start time, when
+adding a time entry via `cft`, will be the current time (unless a specific
+date is specified in which case it'll be midnight). Updating existing time
 entries, however, will preserve their start time. The ability to specify a
 start time when creating a time entry will be added if needed.
 
