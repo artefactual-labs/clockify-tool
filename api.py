@@ -101,4 +101,13 @@ class ClockifyApi:
         url = self.url + 'workspaces/' + self.workspace + '/reports/summary/'
         response = self.post(url, data)
 
-        return response.json()['timeEntries']
+        # work around API issue by manually culling entries out of date/time range
+        response_data = response.json()
+
+        entries = []
+
+        for entry in response_data['timeEntries']:
+            if entry['timeInterval']['end'] <= data['endDate']:
+                entries.append(entry)
+
+        return entries
