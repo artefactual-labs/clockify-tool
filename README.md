@@ -226,19 +226,28 @@ Help for the update command:
 
 Here's an example (in which `5ce54a35a02987296634c98a` is the time entry's ID:
 
-    $ ./cft update 5ce54a35a02987296634c98a --hours=1.5
+    $ ./cft update 5ce54a35a02987296634c98a --comments="Changed tires."  --hours=1.5
 
-When adjusting hours worked, the `+` or `-` operators can be used to increment
+Comments can be amended, rather than replaced, using the `--append` option.
+
+For example:
+
+    $ ./cft u 5ce54a35a02987296634c98a -a "I also fixed the flux capacitor."
+
+When updating hours worked, the `+` or `-` operators can be used to increment
 or decrement the entry's current hours worked value.
 
 For example:
 
     $ ./cft u 5ce54a35a02987296634c98a -t +.25
 
-Similarly comments can be amended, rather than replaced, using the `--append`
-option. For example:
+When adjusting a date, the `+` or `-` operators are relative to the current
+date. If you added something today that should be dated as yesteray you could
+update it with `-1` as the date to fix.
 
-    $ ./cft u 5ce54a35a02987296634c98a -a "I also fixed the flux capacitor."
+For example:
+
+    $ ./cft u 5ce54a35a02987296634c98a -d -1
 
 Note: make sure you read the intro to this README file so you know that there
 can be issues with updating time entries if you use both Clockify's web UI and
