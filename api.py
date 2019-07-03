@@ -107,7 +107,7 @@ class ClockifyApi:
         entries = []
 
         for entry in response_data['timeEntries']:
-            if entry['timeInterval']['end'] <= data['endDate']:
+            if entry['timeInterval']['start'] >= data['startDate'] and entry['timeInterval']['end'] <= data['endDate']:
                 entries.append(entry)
 
         return entries
