@@ -10,8 +10,12 @@ that allows you to add a time entry like this:
 
     $ ./cft +scrum
 
-Clockify's API, however, requires that all important details about a time entry
-be provided when making a change to a time entry. Because of this `cft`, when
+
+Known issues
+------------
+
+Clockify's API requires that all important details about a time entry be
+provided when making a change to a time entry. Because of this `cft`, when
 you list or create time entries, caches these details. Given this if you list
 time entries in `cft`, change one of the listed time entries using Clockify's
 web UI, then change the same time entry using `cft` you'd lose the changes you
@@ -25,13 +29,7 @@ date is specified in which case it'll be midnight). Updating existing time
 entries, however, will preserve their start time. The ability to specify a
 start time when creating a time entry will be added if needed.
 
-Tested with Python 2.7 and 3.
-
-
-Known issues
-------------
-
-* Will need to be tweaked to handle Unicode
+Tested with Python 2.7 and 3. Will need to be tweaked to handle Unicode.
 
 
 Installation
