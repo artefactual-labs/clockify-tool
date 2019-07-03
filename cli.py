@@ -53,6 +53,7 @@ def arg_parser():
     # Update entry command
     parser_update = subparsers.add_parser('update', help='Update time entry', parents=[entry_parser])
     parser_update.add_argument('id', metavar='entry ID', help='ID of time entry: required')
+    parser_update.add_argument('-a', '--append', metavar='append: append text to comments', action='store')
     parser_update.set_defaults(func='update_entry')
 
     # List command

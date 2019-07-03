@@ -104,6 +104,15 @@ def update_entry(args, config, app_data):
         cached_entry['description'] = args.comments
         print('Changing comments to: ' + args.comments)
 
+    # Append to description, if necesary
+    if args.append:
+        changed = True
+
+        appended_description = updated_entry['description'] + ' ' + args.append
+        updated_entry['description'] = appended_description
+        cached_entry['description'] = appended_description
+        print('Appended to comments: ' + args.append)
+
     # Establish entry hours
     current_hours = helpers.iso_duration_to_hours(cached_entry['timeInterval']['duration'])
 
