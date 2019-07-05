@@ -226,7 +226,7 @@ Help for the update command:
 
 Here's an example (in which `5ce54a35a02987296634c98a` is the time entry's ID:
 
-    $ ./cft update 5ce54a35a02987296634c98a --comments="Changed tires."  --hours=1.5
+    $ ./cft update 5ce54a35a02987296634c98a --comments="Changed tires." --hours=1.5
 
 Comments can be amended, rather than replaced, using the `--append` option.
 
