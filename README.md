@@ -213,6 +213,7 @@ Help for the update command:
     $ ./cft update -h
     usage: cft update [-h] [-c comments: required for new time entries]
                       [-t hours spent: required for new time entries] [-d date]
+                      [-a append: append text to comments]
                       entry ID
     
     positional arguments:
@@ -223,6 +224,7 @@ Help for the update command:
       -c comments: required for new time entries, --comments comments: required for new time entries
       -t hours spent: required for new time entries, --hours hours spent: required for new time entries
       -d date, --date date  defaults to today
+      -a append: append text to comments, --append append: append text to comments
 
 Here's an example (in which `5ce54a35a02987296634c98a` is the time entry's ID:
 
