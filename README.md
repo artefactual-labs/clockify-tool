@@ -203,6 +203,14 @@ Here's the same example in a briefer form.
 
     $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25
 
+When specifying a date, the `+` or `-` operators are relative to the current
+date. If you create a time entry today that should be dated as yesteray you
+could update it with `-1` as the date to fix.
+
+For example:
+
+    $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -d -1
+
 
 ### Updating a time entry
 
