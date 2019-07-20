@@ -11,8 +11,15 @@ PERIODS = {
   'lw': {'name': 'lastweek', 'description': 'last work week (Monday to Friday)'},
   'cw': {'name': 'currentweek', 'description': 'current work week (Monday to Friday)'},
   'flw': {'name': 'fulllastweek', 'description': 'last full week (Sunday to Saturday)'},
-  'fcw': {'name': 'fullcurrentweek', 'description': 'current full week (Sunday to Saturday)'}
+  'fcw': {'name': 'fullcurrentweek', 'description': 'current full week (Sunday to Saturday)'},
+  'cp': {'name': 'currentpayperiod', 'description': 'current pay period'},
+  'pp': {'name': 'previouspayperiod', 'description': 'previous pay period'},
 }
+
+
+# Artefactual's pay period details
+PERIOD_DAYS = 14
+PERIOD_FIRST_DAY = date(2019, 7, 6)  # Known first day of period.
 
 
 def time_entry_list(from_date, to_date, clockify, verbose=False):
@@ -123,6 +130,20 @@ def resolve_period(period):
         start_date = weekday_last_week(6)  # this Sunday
         end_date = weekday_of_week(5)  # this Saturday
         return {'start': start_date, 'end': end_date}
+
+    # Payroll periods
+    today = date.today()
+    past_days = (today - PERIOD_FIRST_DAY).days % PERIOD_DAYS
+    if period == 'currentpayperiod':
+        start_date = today - timedelta(days=past_days)
+        end_date = today + timedelta(days=PERIOD_DAYS - past_days - 1)
+    elif period == 'previouspayperiod':
+        end_date = today - timedelta(days=past_days + 1)
+        start_date = end_date - timedelta(days=PERIOD_DAYS - 1)
+    return {
+        'start': start_date.strftime("%Y-%m-%d"),
+        'end': end_date.strftime("%Y-%m-%d")
+    }
 
 
 def resolve_project_template(project_name, templates):
