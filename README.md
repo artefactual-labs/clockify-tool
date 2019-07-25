@@ -87,7 +87,7 @@ Clockify Tool allows you to list, create and delete Clockify time entries.
 Help for the list command:
 
     $ ./cft list -h
-    usage: cft list [-h] [-s start date] [-e end date] [period]
+    usage: cft list [-h] [-s start date] [-e end date] [-v] [period]
     
     positional arguments:
       period                time period: optional, overrides -s and -e
@@ -96,11 +96,14 @@ Help for the list command:
       -h, --help            show this help message and exit
       -s start date, --start start date
       -e end date, --end end date
+      -v, --verbose
     
-    Available periods: "yesterday" ("y"): day before today, "lastweek" ("lw"):
-    last work week (Monday to Friday), "currentweek" ("cw"): current work week
-    (Monday to Friday), "fulllastweek" ("flw"): last full week (Sunday to
-    Saturday), "fullcurrentweek" ("fcw"): current full week (Sunday to Saturday)
+    Available periods: "previouspayperiod" ("pp"): previous pay period,
+    "fullcurrentweek" ("fcw"): current full week (Sunday to Saturday),
+    "fulllastweek" ("flw"): last full week (Sunday to Saturday), "lastweek"
+    ("lw"): last work week (Monday to Friday), "yesterday" ("y"): day before
+    today, "currentpayperiod" ("cp"): current pay period, "currentweek" ("cw"):
+    current work week (Monday to Friday)
 
 Example list of today's time entries:
 
