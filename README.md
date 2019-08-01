@@ -23,11 +23,8 @@ make in the web UI. For this reason it's advised to stick to `cft` for time
 entry if you want to use `cft`. You can still safely use the web UI for
 searching, etc.
 
-Also note that `cft` isn't too concerned about start time. Start time, when
-adding a time entry via `cft`, will be the current time (unless a specific
-date is specified in which case it'll be midnight). Updating existing time
-entries, however, will preserve their start time. The ability to specify a
-start time when creating a time entry will be added if needed.
+Also note that, when updating existing time entries, start time can't yet be
+specified.
 
 Tested with Python 2.7 and 3. Will need to be tweaked to handle Unicode.
 
@@ -187,6 +184,7 @@ Help for the new command:
     $ ./cft new -h
     usage: cft new [-h] [-c comments: required for new time entries]
                    [-t hours spent: required for new time entries] [-d date]
+                   [-s start time]
                    project ID
     
     positional arguments:
@@ -197,6 +195,7 @@ Help for the new command:
       -c comments: required for new time entries, --comments comments: required for new time entries
       -t hours spent: required for new time entries, --hours hours spent: required for new time entries
       -d date, --date date  defaults to today
+      -s start time, --start start time
 
 Here's an example (in which `5cb772f3f15c9857ee275d00` is the project ID:
 
@@ -213,6 +212,11 @@ could update it with `-1` as the date to fix.
 For example:
 
     $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -d -1
+
+Note that when adding a time entry the current time will be used as the start
+time unless a date or start time are specified. If a date is specified the
+start time will be midnight. If a start time is specified, however, then the
+specified start time will be used.
 
 
 ### Updating a time entry

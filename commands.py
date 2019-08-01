@@ -49,7 +49,7 @@ def new_entry(args, config, app_data):
         print('Specifiy hours.')
         return
 
-    entry = app_data['clockify'].create_entry(args.id, args.comments, args.hours, args.date)
+    entry = app_data['clockify'].create_entry(args.id, args.comments, args.hours, args.date, args.start)
 
     if 'message' in entry and 'code' in entry:
         print(entry['message'])

@@ -46,15 +46,31 @@ class ClockifyApi:
         utc_datetime = new_localized_datetime.astimezone(pytz.utc)
         return isodate.datetime_isoformat(utc_datetime)
 
-    def create_entry(self, project, description, hours, date=None):
+    def replace_datetime_time(self, date, time):
+        time_data = time.split(':')
+
+        hours = int(time_data[0])
+        minutes = int(time_data[1])
+
+        return date.replace(hour=hours, minute=minutes)
+
+    def create_entry(self, project, description, hours, date=None, start_time=None):
         if not date:
-            utc_start_datetime = self.tz.localize(datetime.now()).astimezone(pytz.utc)
+            local_datetime = datetime.now()
+
+            if start_time:
+                local_datetime = self.replace_datetime_time(local_datetime, start_time)
+
+            utc_start_datetime = self.tz.localize(local_datetime).astimezone(pytz.utc)
             localized_end_datetime = utc_start_datetime + timedelta(hours=float(hours))
             utc_end_datetime = localized_end_datetime.astimezone(pytz.utc)
 
             start_date = isodate.datetime_isoformat(utc_start_datetime)
             end_date = isodate.datetime_isoformat(utc_end_datetime)
         else:
+            if start_time:
+                date = date + ' ' + start_time
+
             start_date = self.local_date_string_to_utc_iso_8601(date)
             localized_datetime = self.local_date_string_to_localized_datetime(date)
             end_date = self.add_hours_to_localized_datetime_and_convert_to_iso_8601(localized_datetime, hours)

@@ -48,6 +48,7 @@ def arg_parser():
     # New entry command
     parser_new = subparsers.add_parser('new', help='Create new time entry', parents=[entry_parser])
     parser_new.add_argument('id', metavar='project ID', help='ID of project: required')
+    parser_new.add_argument('-s', '--start', metavar='start time', action='store')
     parser_new.set_defaults(func='new_entry')
 
     # Update entry command
