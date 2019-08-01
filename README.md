@@ -24,7 +24,7 @@ entry if you want to use `cft`. You can still safely use the web UI for
 searching, etc.
 
 Also note that, when updating existing time entries, start time can't yet be
-specified.
+changed. This will likely be added in the future.
 
 Tested with Python 2.7 and 3. Will need to be tweaked to handle Unicode.
 
@@ -213,10 +213,17 @@ For example:
 
     $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -d -1
 
+If specifying a start time, using the `--start`/`-s` optional argument, the
+time should be specified in 24 hour time format.
+
+For example:
+
+    $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -s 13:15
+
 Note that when adding a time entry the current time will be used as the start
-time unless a date or start time are specified. If a date is specified the
-start time will be midnight. If a start time is specified, however, then the
-specified start time will be used.
+time unless a date and/or start time are specified. If a date is specified, but
+a start time isn't, then the start time will be midnight. If a start time is
+specified, however, then the specified start time will be used.
 
 
 ### Updating a time entry
