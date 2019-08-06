@@ -164,3 +164,8 @@ class ClockifyApi:
                 entries.append(entry)
 
         return entries
+
+    def project_tasks(self, id):
+        url = self.url + 'workspaces/' + self.workspace + '/projects/' + id + '/tasks/'
+        response = requests.get(url, headers=self.headers)
+        return response.json()

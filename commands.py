@@ -194,6 +194,11 @@ def list_projects(args, config, app_data):
         print('* {} [{}]'.format(project['name'].encode('utf-8'), project['id']))
 
 
+def list_project_tasks(args, config, app_data):
+    for project in app_data['clockify'].project_tasks(args.id):
+        print('* {} [{}]'.format(project['name'].encode('utf-8'), project['id']))
+
+
 def cache_statistics(args, config, app_data):
     cache_dir = os.path.join(app_data['clockify'].cache.get_cache_directory())
     cache_entries = 0
