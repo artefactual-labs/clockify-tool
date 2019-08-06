@@ -64,7 +64,7 @@ def new_entry(args, config, app_data):
     del cached_entry['tagIds']
     cached_entry['task'] = None
     del cached_entry['taskId']
-    helpers.write_cache_entry(cached_entry)
+    app_data['clockify'].cache.create_from_entry(cached_entry)
 
     print("Time entry created.")
 
@@ -73,7 +73,7 @@ def update_entry(args, config, app_data):
     changed = False
 
     # Need to use cached time entry data because API doesn't support getting time entry data by ID
-    cached_entry = helpers.get_cached_entry(args.id)
+    cached_entry = app_data['clockify'].cache.get_cached_entry(args.id)
 
     if not cached_entry:
         print('Time entry does not exist or is not cached.')
@@ -157,7 +157,7 @@ def update_entry(args, config, app_data):
         response = app_data['clockify'].update_entry(updated_entry)
 
         if response.status_code == 200:
-            helpers.write_cache_entry(cached_entry)
+            app_data['clockify'].cache.create_from_entry(cached_entry)
             print(helpers.entry_bullet_point(cached_entry))
             print('Time entry updated.')
         else:
@@ -174,7 +174,7 @@ def delete_entry(args, config, app_data):
 
     if response.status_code == 204:
 
-        cache_filepath = helpers.get_cache_filepath(args.id)
+        cache_filepath = app_data['clockify'].cache.get_cache_filepath(args.id)
 
         if os.path.isfile(cache_filepath):
             os.remove(cache_filepath)
@@ -195,7 +195,7 @@ def list_projects(args, config, app_data):
 
 
 def cache_statistics(args, config, app_data):
-    cache_dir = os.path.join(helpers.get_cache_directory())
+    cache_dir = os.path.join(app_data['clockify'].cache.get_cache_directory())
     cache_entries = 0
 
     cache_files = [f for f in os.listdir(cache_dir) if os.path.isfile(os.path.join(cache_dir, f))]

@@ -1,10 +1,44 @@
 from datetime import datetime, timedelta
 import dateutil.parser
 import json
+import os
 import pytz
+import tempfile
 import isodate
 import requests
 from tzlocal import get_localzone
+
+
+class ClockifyEntryCacheManager:
+
+    def get_cache_directory(self):
+        cache_dir = os.path.join(tempfile.gettempdir(), 'cft')
+
+        if not os.path.isdir(cache_dir):
+            os.mkdir(cache_dir)
+
+        return cache_dir
+
+    def get_cache_filepath(self, identifier):
+        return os.path.join(self.get_cache_directory(), 'cft-{}'.format(identifier))
+
+    def create_from_entry(self, entry):
+        filepath = self.get_cache_filepath(entry['id'])
+
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+
+        with open(filepath, 'w') as cache_file:
+            cache_file.write(json.dumps(entry))
+
+    def get_cached_entry(self, identifier):
+        filepath = self.get_cache_filepath(identifier)
+
+        if not os.path.isfile(filepath):
+            return
+
+        with open(self.get_cache_filepath(identifier)) as json_file:
+            return json.load(json_file)
 
 
 class ClockifyApi:
@@ -12,10 +46,13 @@ class ClockifyApi:
     def __init__(self, apiKey, url=None):
         if not url:
             url = 'https://api.clockify.me/api/'
+
         self.url = url
         self.key = apiKey
         self.headers = {'Content-Type': 'application/json', 'X-Api-Key': self.key}
         self.tz = get_localzone()
+
+        self.cache = ClockifyEntryCacheManager()
 
     def post(self, url, data):
         return requests.post(url, data=json.dumps(data), headers=self.headers)

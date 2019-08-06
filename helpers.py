@@ -1,8 +1,5 @@
 from __future__ import print_function
 from datetime import date, datetime, timedelta
-import json
-import os
-import tempfile
 import isodate
 
 
@@ -37,7 +34,7 @@ def time_entry_list(from_date, to_date, clockify, verbose=False):
 
         for entry in time_entries:
             # Cache entry in case user wants to update event
-            write_cache_entry(entry)
+            clockify.cache.create_from_entry(entry)
 
             report += entry_bullet_point(entry, verbose)
             sum += iso_duration_to_hours(entry['timeInterval']['duration'])
@@ -164,39 +161,6 @@ def resolve_project_alias(issue_id, templates):
         return resolve_project_alias(resolved_id, templates)
     else:
         return issue_id
-
-
-def get_cache_directory():
-    cache_dir = os.path.join(tempfile.gettempdir(), 'cft')
-
-    if not os.path.isdir(cache_dir):
-        os.mkdir(cache_dir)
-
-    return cache_dir
-
-
-def get_cache_filepath(identifier):
-    return os.path.join(get_cache_directory(), 'cft-{}'.format(identifier))
-
-
-def write_cache_entry(entry):
-    filepath = get_cache_filepath(entry['id'])
-
-    if os.path.isfile(filepath):
-        os.remove(filepath)
-
-    with open(filepath, 'w') as cache_file:
-        cache_file.write(json.dumps(entry))
-
-
-def get_cached_entry(identifier):
-    filepath = get_cache_filepath(identifier)
-
-    if not os.path.isfile(filepath):
-        return
-
-    with open(get_cache_filepath(identifier)) as json_file:
-        return json.load(json_file)
 
 
 def describe_periods():
