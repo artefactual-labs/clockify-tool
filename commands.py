@@ -49,7 +49,16 @@ def new_entry(args, config, app_data):
         print('Specifiy hours.')
         return
 
-    entry = app_data['clockify'].create_entry(args.id, args.comments, args.hours, args.date, args.start)
+    # Check if ID indicates a task rather than project
+    task_id = None
+    project_id = app_data['clockify'].get_task_project_id(args.id)
+
+    if project_id is None:
+        project_id = args.id
+    else:
+        task_id = args.id
+
+    entry = app_data['clockify'].create_entry(project_id, args.comments, args.hours, args.date, args.start, task=task_id)
 
     if 'message' in entry and 'code' in entry:
         print(entry['message'])

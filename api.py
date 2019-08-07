@@ -91,7 +91,7 @@ class ClockifyApi:
 
         return date.replace(hour=hours, minute=minutes)
 
-    def create_entry(self, project, description, hours, date=None, start_time=None):
+    def create_entry(self, project, description, hours, date=None, start_time=None, task=None):
         if not date:
             local_datetime = datetime.now()
 
@@ -118,6 +118,7 @@ class ClockifyApi:
             "billable": "false",
             "description": description,
             "projectId": project,
+            "taskId": task,
             "tagIds": []
         }
 
@@ -169,3 +170,13 @@ class ClockifyApi:
         url = self.url + 'workspaces/' + self.workspace + '/projects/' + id + '/tasks/'
         response = requests.get(url, headers=self.headers)
         return response.json()
+
+    def get_task_project_id(self, id):
+        url = self.url + 'workspaces/' + self.workspace + '/projects/taskIds/'
+        data = {'ids': [id]}
+        tasks = self.post(url, data).json()
+
+        if tasks != []:
+            return tasks[0]['projectId']
+        else:
+            return None
