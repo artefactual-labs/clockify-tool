@@ -174,6 +174,18 @@ For example:
     * Meetings [5cdb08ead278ae206156ae6f]
 
 
+### List project tasks
+
+The `projecttasks` (or `pt`) command is used to list project tasks. The project
+task name and ID will be output.
+
+For example:
+
+    $ ./cft projecttasks ed5c600955e74cce9648cd91
+    * Design [3539934f65f84a5fb98a2604]
+    * Implementation [cafcd3051c5c46c89e2ec4cb]
+
+
 ### Creating a time entry
 
 The `new` (or `n`) command is used to create a new time entry. The number of
@@ -188,7 +200,7 @@ Help for the new command:
                    project ID
     
     positional arguments:
-      project ID            ID of project: required
+      project ID            ID of project or task: required
     
     optional arguments:
       -h, --help            show this help message and exit

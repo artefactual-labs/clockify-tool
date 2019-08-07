@@ -210,7 +210,6 @@ def list_project_tasks(args, config, app_data):
 
 def cache_statistics(args, config, app_data):
     cache_dir = os.path.join(app_data['clockify'].cache.get_cache_directory())
-    cache_entries = 0
 
     cache_files = [f for f in os.listdir(cache_dir) if os.path.isfile(os.path.join(cache_dir, f))]
 
