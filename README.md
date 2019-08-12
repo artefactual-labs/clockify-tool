@@ -76,7 +76,8 @@ save time when entering new time entries.
 Commands
 --------
 
-Clockify Tool allows you to list, create and delete Clockify time entries.
+Clockify Tool allows you to list, create and delete Clockify time entries. You
+can also list projects, project tasks, and workspaces to find out their IDs.
 
 
 ### Listing time entries in a period of time
@@ -320,13 +321,13 @@ can be used to delete all cached time entries.
 Advanced configuration
 ----------------------
 
-You can avoid save time through advanced configuration.
+You can save time entering time entries by using advanced configuration.
 
 ### Project time entry aliases
 
-When specifying a project you can either use ID of the project or you can refer to
-an alias specifed in your configuration file. You can also create aliases for
-aliases.
+When specifying a project, or project task, you can either use ID of the
+project or you can refer to an alias specifed in your configuration file. You
+can also create aliases for aliases.
 
 Example:
 
@@ -339,9 +340,9 @@ Example:
 
 ### Project time entry templates
 
-In addition to using an alias to specify a project ID, you can use the same
-technique to, when creating a time entry, automatically set the comments and
-hours spent.
+In addition to using an alias to specify a project, or project task, ID, you
+can use the same technique to, when creating a time entry, automatically set
+the comments and hours spent.
 
 Example:
 
