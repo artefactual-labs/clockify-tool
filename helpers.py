@@ -33,9 +33,6 @@ def time_entry_list(from_date, to_date, clockify, verbose=False):
         report = "Time entries:\n"
 
         for entry in time_entries:
-            # Cache entry in case user wants to update event
-            clockify.cache.create_from_entry(entry)
-
             report += entry_bullet_point(entry, verbose)
             sum += iso_duration_to_hours(entry['timeInterval']['duration'])
 

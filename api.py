@@ -164,6 +164,9 @@ class ClockifyApi:
             if entry['timeInterval']['start'] >= data['startDate'] and entry['timeInterval']['end'] <= data['endDate']:
                 entries.append(entry)
 
+                # Cache entry in case user wants to later update event
+                self.cache.create_from_entry(entry)
+
         return entries
 
     def project_tasks(self, id):
