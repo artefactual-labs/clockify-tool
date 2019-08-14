@@ -31,6 +31,18 @@ class ClockifyEntryCacheManager:
         with open(filepath, 'w') as cache_file:
             cache_file.write(json.dumps(entry))
 
+    def create_from_new_entry_response(self, response_data):
+        cached_entry = response_data.copy()
+
+        cached_entry['project'] = {'id': cached_entry['projectId']}
+        del cached_entry['projectId']
+        cached_entry['tags'] = None
+        del cached_entry['tagIds']
+        cached_entry['task'] = None
+        del cached_entry['taskId']
+
+        self.create_from_entry(cached_entry)
+
     def get_cached_entry(self, identifier):
         filepath = self.get_cache_filepath(identifier)
 
@@ -125,7 +137,13 @@ class ClockifyApi:
         url = self.url + 'workspaces/' + self.workspace + '/timeEntries/'
         response = self.post(url, data)
 
-        return response.json()
+        # Cache entry if entry was created
+        response_data = response.json()
+
+        if 'projectId' in response_data:
+            self.cache.create_from_new_entry_response(response_data)
+
+        return response_data
 
     # entry argument must be in UpdateTimeEntryRequest format (see Clockify API documentation)
     def update_entry(self, entry):
