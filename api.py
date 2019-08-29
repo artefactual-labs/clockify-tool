@@ -43,6 +43,51 @@ class ClockifyEntryCacheManager:
 
         self.create_from_entry(cached_entry)
 
+    def generate_update_entry(self, entry_id, comments=None, date=None):
+        # Need to use cached time entry data because API doesn't support getting time entry data by ID
+        cached_entry = self.get_cached_entry(entry_id)
+
+        if not cached_entry:
+            return
+
+        # Change TimeEntrySummaryDto to work as UpdateTimeEntryRequest format (see Clockify API documentation)
+        updated_entry = {}
+        updated_entry['id'] = cached_entry['id']
+        updated_entry['description'] = cached_entry['description']
+        updated_entry['start'] = cached_entry['timeInterval']['start']
+        updated_entry['end'] = cached_entry['timeInterval']['end']
+        updated_entry['projectId'] = cached_entry['project']['id']
+        updated_entry['billable'] = cached_entry['billable']
+        updated_entry['tagIds'] = []
+
+        if 'task' in cached_entry and cached_entry['task']:
+            updated_entry['taskId'] = cached_entry['task']['id']
+
+        if 'tags' in cached_entry and cached_entry['tags']:
+            for tag in cached_entry['tags']:
+                updated_entry['tagIds'].append(tag['id'])
+
+        # Change comments, if necessary
+        if comments:
+            updated_entry['description'] = comments
+
+        # Change UTC start date/time, if necessary
+        if date:
+            # Convert entry date to simple sting in local timezone
+            tz = get_localzone()
+
+            original_date_localized = dateutil.parser.parse(updated_entry['start']).astimezone(tz)
+            original_date = original_date_localized.strftime('%Y-%m-%d')
+
+            if original_date != date:
+                # Convert new date to UTC ISO 8601
+                naive_date = dateutil.parser.parse(date)
+                localized_date = tz.localize(naive_date)
+                utc_datetime = localized_date.astimezone(pytz.utc)
+                updated_entry['start'] = isodate.datetime_isoformat(utc_datetime)
+
+        return updated_entry
+
     def get_cached_entry(self, identifier):
         filepath = self.get_cache_filepath(identifier)
 
@@ -51,6 +96,10 @@ class ClockifyEntryCacheManager:
 
         with open(self.get_cache_filepath(identifier)) as json_file:
             return json.load(json_file)
+
+    def iso_duration_to_hours(self, duration):
+        minutes = isodate.parse_duration(duration).total_seconds() / 60
+        return minutes / 60
 
 
 class ClockifyApi:

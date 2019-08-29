@@ -71,46 +71,13 @@ def new_entry(args, config, app_data):
 def update_entry(args, config, app_data):
     changed = False
 
+    # TODO ... refactor this out
     # Need to use cached time entry data because API doesn't support getting time entry data by ID
     cached_entry = app_data['clockify'].cache.get_cached_entry(args.id)
 
     if not cached_entry:
         print('Time entry does not exist or is not cached.')
         return
-
-    # Change TimeEntrySummaryDto to work as UpdateTimeEntryRequest format (see Clockify API documentation)
-    updated_entry = {}
-    updated_entry['id'] = cached_entry['id']
-    updated_entry['description'] = cached_entry['description']
-    updated_entry['start'] = cached_entry['timeInterval']['start']
-    updated_entry['end'] = cached_entry['timeInterval']['end']
-    updated_entry['projectId'] = cached_entry['project']['id']
-    updated_entry['billable'] = cached_entry['billable']
-    updated_entry['tagIds'] = []
-
-    if 'task' in cached_entry and cached_entry['task']:
-        updated_entry['taskId'] = cached_entry['task']['id']
-
-    if 'tags' in cached_entry and cached_entry['tags']:
-        for tag in cached_entry['tags']:
-            updated_entry['tagIds'].append(tag['id'])
-
-    # Update description, if necessary
-    if args.comments and args.comments != updated_entry['description']:
-        changed = True
-
-        updated_entry['description'] = args.comments
-        cached_entry['description'] = args.comments
-        print('Changing comments to: ' + args.comments)
-
-    # Append to description, if necesary
-    if args.append:
-        changed = True
-
-        appended_description = updated_entry['description'] + ' ' + args.append
-        updated_entry['description'] = appended_description
-        cached_entry['description'] = appended_description
-        print('Appended to comments: ' + args.append)
 
     # Establish entry hours
     current_hours = helpers.iso_duration_to_hours(cached_entry['timeInterval']['duration'])
@@ -129,23 +96,32 @@ def update_entry(args, config, app_data):
 
         print('Changing hours from ' + str(original_hours) + ' to: ' + str(current_hours))
 
-    # Change UTC start date/time, if necessary
+    updated_entry = app_data['clockify'].cache.generate_update_entry(args.id, comments=args.comments, date=args.date)
+
+    # Update description, if necessary
+    if args.comments and args.comments != cached_entry['description']:
+        changed = True
+        cached_entry['description'] = args.comments
+        print('Changing comments to: ' + args.comments)
+
+    # Append to description, if necesary
+    if args.append:
+        changed = True
+
+        appended_description = updated_entry['description'] + ' ' + args.append
+        updated_entry['description'] = appended_description
+        cached_entry['description'] = appended_description
+        print('Appended to comments: ' + args.append)
+
+    # TODO: legit change detection
     if args.date:
-        # Convert entry date to simple sting in local timezone
-        original_date_localized = dateutil.parser.parse(updated_entry['start']).astimezone(app_data['clockify'].tz)
-        original_date = original_date_localized.strftime('%Y-%m-%d')
-
-        if original_date != args.date:
-            changed = True
-
-            # Convert new date to UTC ISO 8601
-            updated_entry['start'] = app_data['clockify'].local_date_string_to_utc_iso_8601(args.date)
-            cached_entry['timeInterval']['start'] = updated_entry['start']
-
-            print('Changing activies from ' + original_date + ' to ' + args.date)
+        changed = True
+        cached_entry['timeInterval']['start'] = updated_entry['start']
+        print('Changing date to ' + args.date)
 
     # Convert UTC start/time to localized datetime and use it to calculate ISO 8601 end date/time
     start_datetime = dateutil.parser.parse(updated_entry['start'])
+    # TODO: move this to api.py
     updated_entry['end'] = app_data['clockify'].add_hours_to_localized_datetime_and_convert_to_iso_8601(start_datetime, current_hours)
 
     cached_entry['timeInterval']['duration'] = isodate.duration_isoformat(dateutil.parser.parse(updated_entry['end']) - dateutil.parser.parse(updated_entry['start']))
