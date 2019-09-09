@@ -31,27 +31,3 @@ def load_config():
         raise Exception('Please set Clockify API key as "api key" in {}.'.format(config_filename))
 
     return config
-
-
-def time_entry_list(from_date, to_date, user, redmine):
-    print("Fetching time entries from {} to {} for {}...".format(from_date, to_date, user))
-    print()
-
-    # Get yesterday's time entries
-    time_entries = redmine.time_entry.filter(user_id=user.id, from_date=from_date, to_date=to_date, sort='hours:desc')
-
-    if time_entries:
-        sum = 0
-
-        # Print scrum update template
-        report = "Time entries:\n"
-
-        for entry in time_entries:
-            report += helpers.entry_bullet_point(entry)
-            sum += entry.hours
-
-        report += "\n" + str(sum) + " hours.\n"
-    else:
-        report = "No time entries.\n"
-
-    print(report)

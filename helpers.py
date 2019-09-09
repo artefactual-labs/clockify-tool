@@ -1,6 +1,5 @@
 from __future__ import print_function
 from datetime import date, datetime, timedelta
-import isodate
 
 
 PERIODS = {
@@ -33,8 +32,8 @@ def time_entry_list(from_date, to_date, clockify, verbose=False):
         report = "Time entries:\n"
 
         for entry in time_entries:
-            report += entry_bullet_point(entry, verbose)
-            sum += iso_duration_to_hours(entry['timeInterval']['duration'])
+            report += entry_bullet_point(clockify, entry, verbose)
+            sum += clockify.cache.iso_duration_to_hours(entry['timeInterval']['duration'])
 
         report += "\n" + str(sum) + " hours.\n"
     else:
@@ -43,7 +42,7 @@ def time_entry_list(from_date, to_date, clockify, verbose=False):
     print(report)
 
 
-def entry_bullet_point(entry, verbose=False):
+def entry_bullet_point(clockify, entry, verbose=False):
     item = '* '
 
     if verbose:
@@ -54,20 +53,10 @@ def entry_bullet_point(entry, verbose=False):
     if 'project' in entry and 'name' in entry['project']:
         item = item + ' ({}: {})'.format(entry['project']['name'], entry['project']['id'])
 
-    hours = iso_duration_to_hours(entry['timeInterval']['duration'])
+    hours = clockify.cache.iso_duration_to_hours(entry['timeInterval']['duration'])
     item = item + ' [{} hours: {}]'.format(hours, entry['id'])
 
     return item + "\n"
-
-
-def iso_duration_to_hours(duration):
-    minutes = isodate.parse_duration(duration).total_seconds() / 60
-    return minutes / 60
-
-
-def hours_to_iso_duration(hours):
-    duration = timedelta(hours=1.5)
-    return isodate.duration_isoformat(duration)
 
 
 def handle_date_calculation_value(date_value):

@@ -9,7 +9,15 @@ import requests
 from tzlocal import get_localzone
 
 
-class ClockifyEntryCacheManager:
+class Iso8601DateConverter:
+
+    def add_hours_to_localized_datetime_and_convert_to_iso_8601(self, localized_datetime, hours):
+        new_localized_datetime = localized_datetime + timedelta(hours=float(hours))
+        utc_datetime = new_localized_datetime.astimezone(pytz.utc)
+        return isodate.datetime_isoformat(utc_datetime)
+
+
+class ClockifyEntryCacheManager(Iso8601DateConverter):
 
     def get_cache_directory(self):
         cache_dir = os.path.join(tempfile.gettempdir(), 'cft')
@@ -43,7 +51,7 @@ class ClockifyEntryCacheManager:
 
         self.create_from_entry(cached_entry)
 
-    def generate_update_entry(self, entry_id, comments=None, date=None):
+    def generate_update_entry(self, entry_id, comments=None, date=None, hours=None):
         # Need to use cached time entry data because API doesn't support getting time entry data by ID
         cached_entry = self.get_cached_entry(entry_id)
 
@@ -86,6 +94,10 @@ class ClockifyEntryCacheManager:
                 utc_datetime = localized_date.astimezone(pytz.utc)
                 updated_entry['start'] = isodate.datetime_isoformat(utc_datetime)
 
+        # Convert UTC start/time to localized datetime and use it to calculate ISO 8601 end date/time
+        start_datetime = dateutil.parser.parse(updated_entry['start'])
+        updated_entry['end'] = self.add_hours_to_localized_datetime_and_convert_to_iso_8601(start_datetime, hours)
+
         return updated_entry
 
     def get_cached_entry(self, identifier):
@@ -102,7 +114,7 @@ class ClockifyEntryCacheManager:
         return minutes / 60
 
 
-class ClockifyApi:
+class ClockifyApi(Iso8601DateConverter):
 
     def __init__(self, apiKey, url=None):
         if not url:
@@ -137,11 +149,6 @@ class ClockifyApi:
     def local_date_string_to_utc_iso_8601(self, date_string):
         localized_date = self.local_date_string_to_localized_datetime(date_string)
         utc_datetime = localized_date.astimezone(pytz.utc)
-        return isodate.datetime_isoformat(utc_datetime)
-
-    def add_hours_to_localized_datetime_and_convert_to_iso_8601(self, localized_datetime, hours):
-        new_localized_datetime = localized_datetime + timedelta(hours=float(hours))
-        utc_datetime = new_localized_datetime.astimezone(pytz.utc)
         return isodate.datetime_isoformat(utc_datetime)
 
     def replace_datetime_time(self, date, time):
