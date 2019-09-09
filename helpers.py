@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 
 PERIODS = {
   'y': {'name': 'yesterday', 'description': 'day before today'},
+  'dby': {'name': 'daybeforeyesterday', 'description': 'day before yesterday'},
   'lw': {'name': 'lastweek', 'description': 'last work week (Monday to Friday)'},
   'cw': {'name': 'currentweek', 'description': 'current work week (Monday to Friday)'},
   'flw': {'name': 'fulllastweek', 'description': 'last full week (Sunday to Saturday)'},
@@ -92,6 +93,10 @@ def resolve_period_abbreviation(period):
 def resolve_period(period):
     if period == 'yesterday':
         yesterday = handle_date_calculation_value('-1')
+        return {'start': yesterday, 'end': yesterday}
+
+    if period == 'daybeforeyesterday':
+        yesterday = handle_date_calculation_value('-2')
         return {'start': yesterday, 'end': yesterday}
 
     if period == 'lastweek':
