@@ -68,6 +68,17 @@ def handle_date_calculation_value(date_value):
     return date_value
 
 
+def handle_hours_calculation_value(current_hours, new_value_or_calculation):
+    if new_value_or_calculation[:1] == '+':
+        current_hours += float(new_value_or_calculation[1:])
+    elif new_value_or_calculation[:1] == '-':
+        current_hours -= float(new_value_or_calculation[1:])
+    else:
+        current_hours = float(new_value_or_calculation)
+
+    return current_hours
+
+
 def weekday_of_week(day_of_week, weeks_previous=0):
     days_ahead_of_weekday_last_week = date.today().weekday() + (weeks_previous * 7) - day_of_week
     last_weekday = datetime.now() - timedelta(days=days_ahead_of_weekday_last_week)

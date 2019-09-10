@@ -82,17 +82,10 @@ def update_entry(args, config, app_data):
     cached_hours = app_data['clockify'].cache.iso_duration_to_hours(cached_entry['timeInterval']['duration'])
     updated_hours = cached_hours
 
+    # Adjust hours, if necessary
     if args.hours and (args.hours[:1] == '+' or args.hours[:1] == '-' or cached_hours != float(args.hours)):
         changed = True
-
-        # Determine updated number of hours
-        if args.hours[:1] == '+':
-            updated_hours += float(args.hours[1:])
-        elif args.hours[:1] == '-':
-            updated_hours -= float(args.hours[1:])
-        else:
-            updated_hours = float(args.hours)
-
+        updated_hours = helpers.handle_hours_calculation_value(float(cached_hours), args.hours)
         print('Changing hours from ' + str(cached_hours) + ' to: ' + str(updated_hours))
 
     updated_entry = app_data['clockify'].cache.generate_update_entry(args.id, comments=args.comments, date=args.date, hours=updated_hours)
@@ -109,10 +102,8 @@ def update_entry(args, config, app_data):
     # Append to description, if necesary
     if args.append:
         changed = True
-
-        appended_description = updated_entry['description'] + ' ' + args.append
-        updated_entry['description'] = appended_description
-        cached_entry['description'] = appended_description
+        updated_entry['description'] = updated_entry['description'] + ' ' + args.append
+        cached_entry['description'] = updated_entry['description']
         print('Appended to comments: ' + args.append)
 
     # TODO: change detection
