@@ -9,15 +9,35 @@ import requests
 from tzlocal import get_localzone
 
 
-class Iso8601DateConverter:
+class Iso8601DateConverter(object):
+    def __init__(self):
+        self.tz = get_localzone()
 
     def add_hours_to_localized_datetime_and_convert_to_iso_8601(self, localized_datetime, hours):
         new_localized_datetime = localized_datetime + timedelta(hours=float(hours))
         utc_datetime = new_localized_datetime.astimezone(pytz.utc)
         return isodate.datetime_isoformat(utc_datetime)
 
+    def utc_iso_8601_string_to_local_datetime(self, utc_date_string):
+        return dateutil.parser.parse(utc_date_string).astimezone(self.tz)
+
+    def iso_duration_to_hours(self, duration):
+        minutes = isodate.parse_duration(duration).total_seconds() / 60
+        return minutes / 60
+
+    def local_date_string_to_utc_iso_8601(self, date_string):
+        localized_date = self.local_date_string_to_localized_datetime(date_string)
+        utc_datetime = localized_date.astimezone(pytz.utc)
+        return isodate.datetime_isoformat(utc_datetime)
+
+    def local_date_string_to_localized_datetime(self, date_string):
+        naive_date = dateutil.parser.parse(date_string)
+        return self.tz.localize(naive_date)
+
 
 class ClockifyEntryCacheManager(Iso8601DateConverter):
+    def __init__(self):
+        super(ClockifyEntryCacheManager, self).__init__()
 
     def get_cache_directory(self):
         cache_dir = os.path.join(tempfile.gettempdir(), 'cft')
@@ -82,17 +102,11 @@ class ClockifyEntryCacheManager(Iso8601DateConverter):
         # Change UTC start date/time, if necessary
         if date:
             # Convert entry date to simple sting in local timezone
-            tz = get_localzone()
-
-            original_date_localized = dateutil.parser.parse(updated_entry['start']).astimezone(tz)
+            original_date_localized = self.utc_iso_8601_string_to_local_datetime(updated_entry['start'])
             original_date = original_date_localized.strftime('%Y-%m-%d')
 
             if original_date != date:
-                # Convert new date to UTC ISO 8601
-                naive_date = dateutil.parser.parse(date)
-                localized_date = tz.localize(naive_date)
-                utc_datetime = localized_date.astimezone(pytz.utc)
-                updated_entry['start'] = isodate.datetime_isoformat(utc_datetime)
+                updated_entry['start']  = self.local_date_string_to_utc_iso_8601(date)
 
         # Convert UTC start/time to localized datetime and use it to calculate ISO 8601 end date/time
         start_datetime = dateutil.parser.parse(updated_entry['start'])
@@ -109,21 +123,18 @@ class ClockifyEntryCacheManager(Iso8601DateConverter):
         with open(self.get_cache_filepath(identifier)) as json_file:
             return json.load(json_file)
 
-    def iso_duration_to_hours(self, duration):
-        minutes = isodate.parse_duration(duration).total_seconds() / 60
-        return minutes / 60
-
 
 class ClockifyApi(Iso8601DateConverter):
 
     def __init__(self, apiKey, url=None):
+        super(ClockifyApi, self).__init__()
+
         if not url:
             url = 'https://api.clockify.me/api/'
 
         self.url = url
         self.key = apiKey
         self.headers = {'Content-Type': 'application/json', 'X-Api-Key': self.key}
-        self.tz = get_localzone()
 
         self.cache = ClockifyEntryCacheManager()
 
@@ -141,15 +152,6 @@ class ClockifyApi(Iso8601DateConverter):
         url = self.url + 'workspaces/' + self.workspace + '/projects/'
         response = requests.get(url, headers=self.headers)
         return response.json()
-
-    def local_date_string_to_localized_datetime(self, date_string):
-        naive_date = dateutil.parser.parse(date_string)
-        return self.tz.localize(naive_date)
-
-    def local_date_string_to_utc_iso_8601(self, date_string):
-        localized_date = self.local_date_string_to_localized_datetime(date_string)
-        utc_datetime = localized_date.astimezone(pytz.utc)
-        return isodate.datetime_isoformat(utc_datetime)
 
     def replace_datetime_time(self, date, time):
         time_data = time.split(':')

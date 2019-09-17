@@ -106,11 +106,15 @@ def update_entry(args, config, app_data):
         cached_entry['description'] = updated_entry['description']
         print('Appended to comments: ' + args.append)
 
-    # TODO: change detection
+    # Update start date, if necessary
     if args.date:
-        changed = True
-        cached_entry['timeInterval']['start'] = updated_entry['start']
-        print('Changing date to ' + args.date)
+        cached_date_local = app_data['clockify'].utc_iso_8601_string_to_local_datetime(cached_entry['timeInterval']['start'])
+        update_date_local = app_data['clockify'].utc_iso_8601_string_to_local_datetime(updated_entry['start'])
+
+        if cached_date_local.date() != update_date_local.date():
+            changed = True
+            cached_entry['timeInterval']['start'] = updated_entry['start']
+            print('Changing date to ' + args.date)
 
     if changed:
         # Perform update via API
