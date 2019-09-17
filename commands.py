@@ -83,7 +83,7 @@ def update_entry(args, config, app_data):
     updated_hours = cached_hours
 
     # Adjust hours, if necessary
-    if args.hours and (args.hours[:1] == '+' or args.hours[:1] == '-' or cached_hours != float(args.hours)):
+    if args.hours and (helpers.contains_calculation(args.hours) or cached_hours != float(args.hours)):
         changed = True
         updated_hours = helpers.handle_hours_calculation_value(float(cached_hours), args.hours)
         print('Changing hours from ' + str(cached_hours) + ' to: ' + str(updated_hours))

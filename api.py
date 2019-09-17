@@ -106,7 +106,7 @@ class ClockifyEntryCacheManager(Iso8601DateConverter):
             original_date = original_date_localized.strftime('%Y-%m-%d')
 
             if original_date != date:
-                updated_entry['start']  = self.local_date_string_to_utc_iso_8601(date)
+                updated_entry['start'] = self.local_date_string_to_utc_iso_8601(date)
 
         # Convert UTC start/time to localized datetime and use it to calculate ISO 8601 end date/time
         start_datetime = dateutil.parser.parse(updated_entry['start'])

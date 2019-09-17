@@ -60,8 +60,15 @@ def entry_bullet_point(clockify, entry, verbose=False):
     return item + "\n"
 
 
+def contains_calculation(value):
+    return value[:1] == '+' or value[:1] == '-'
+
+
 def handle_date_calculation_value(date_value):
-    if date_value[:1] == '+' or date_value[:1] == '-':
+    if date_value == 'today':
+        date_value = '+0'
+
+    if contains_calculation(date_value):
         date_value_raw = date.today() + timedelta(int(date_value))
         date_value = date_value_raw.strftime('%Y-%m-%d')
 
@@ -69,10 +76,8 @@ def handle_date_calculation_value(date_value):
 
 
 def handle_hours_calculation_value(current_hours, new_value_or_calculation):
-    if new_value_or_calculation[:1] == '+':
-        current_hours += float(new_value_or_calculation[1:])
-    elif new_value_or_calculation[:1] == '-':
-        current_hours -= float(new_value_or_calculation[1:])
+    if contains_calculation(new_value_or_calculation):
+        current_hours += float(new_value_or_calculation)
     else:
         current_hours = float(new_value_or_calculation)
 
