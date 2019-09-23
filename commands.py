@@ -154,8 +154,16 @@ def list_workspaces(args, config, app_data):
 
 
 def list_projects(args, config, app_data):
+    project_names = []
+    project_data = {}
+
     for project in app_data['clockify'].projects():
-        print('* {} [{}]'.format(project['name'].encode('utf-8'), project['id']))
+        project_names.append(project['name'])
+        project_data[(project['name'])] = project
+
+    project_names.sort()
+    for project in project_names:
+        print('* {} [{}]'.format(project.encode('utf-8'), project_data[project]['id']))
 
 
 def list_project_tasks(args, config, app_data):
