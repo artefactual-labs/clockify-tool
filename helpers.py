@@ -52,7 +52,10 @@ def entry_bullet_point(clockify, entry, verbose=False):
     item += '{}'.format(entry['description'])
 
     if 'project' in entry and 'name' in entry['project']:
-        item = item + ' ({}: {})'.format(entry['project']['name'], entry['project']['id'])
+        if 'task' in entry and entry['task'] is not None and 'name' in entry['task']:
+            item = item + ' ({}: {} / task: {}: {})'.format(entry['project']['name'], entry['project']['id'], entry['task']['name'], entry['task']['id'])
+        else:
+            item = item + ' ({}: {})'.format(entry['project']['name'], entry['project']['id'])
 
     hours = clockify.cache.iso_duration_to_hours(entry['timeInterval']['duration'])
     item = item + ' [{} hours: {}]'.format(hours, entry['id'])
