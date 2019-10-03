@@ -53,7 +53,10 @@ def entry_bullet_point(clockify, entry, verbose=False):
 
     if 'project' in entry and 'name' in entry['project']:
         if 'task' in entry and entry['task'] is not None and 'name' in entry['task']:
-            item = item + ' ({}: {} / task: {}: {})'.format(entry['project']['name'], entry['project']['id'], entry['task']['name'], entry['task']['id'])
+            if verbose:
+                item = item + ' ({}: {} / task: {}: {})'.format(entry['project']['name'], entry['project']['id'], entry['task']['name'], entry['task']['id'])
+            else:
+                item = item + ' (task: {}:{})'.format(entry['task']['name'], entry['task']['id'])
         else:
             item = item + ' ({}: {})'.format(entry['project']['name'], entry['project']['id'])
 
