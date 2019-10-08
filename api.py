@@ -21,6 +21,10 @@ class Iso8601DateConverter(object):
     def utc_iso_8601_string_to_local_datetime(self, utc_date_string):
         return dateutil.parser.parse(utc_date_string).astimezone(self.tz)
 
+    def utc_iso_8601_string_to_local_datatime_string(self, utc_date_string):
+        local_datetime = self.utc_iso_8601_string_to_local_datetime(utc_date_string)
+        return local_datetime.strftime('%Y-%m-%d %H:%M:%S')
+
     def iso_duration_to_hours(self, duration):
         minutes = isodate.parse_duration(duration).total_seconds() / 60
         return minutes / 60

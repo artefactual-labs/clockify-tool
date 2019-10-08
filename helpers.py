@@ -47,7 +47,8 @@ def entry_bullet_point(clockify, entry, verbose=False):
     item = '* '
 
     if verbose:
-        item += '{} - '.format(entry['timeInterval']['start'])
+        local_date_and_time = clockify.cache.utc_iso_8601_string_to_local_datatime_string(entry['timeInterval']['start'])
+        item += '{} - '.format(local_date_and_time)
 
     item += '{}'.format(entry['description'])
 
