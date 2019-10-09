@@ -25,9 +25,9 @@ def preprocess_argv():
         elif argv[0][0:1] == '+':
             # "+<project>" is shorthand for "new <project>"
             argv = ['new', argv[0][1:]] + argv[1:]
-        elif len(argv) == 1 and helpers.resolve_period_abbreviation(argv[0]):
+        elif helpers.resolve_period_abbreviation(argv[0]):
             # If time period given, not command, use as basis for list command
-            argv = ['list', argv[0]]
+            argv = ['list'] + argv[0:]
     else:
         # Default to "list" command
         argv = ['list']
