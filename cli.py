@@ -16,6 +16,7 @@ def preprocess_argv():
             'd': 'delete',
             'w': 'workspaces',
             'p': 'projects',
+            'pd': 'project',
             'pt': 'projecttasks'
         }
 
@@ -78,6 +79,11 @@ def arg_parser():
     # Projects command
     parser_projects = subparsers.add_parser('projects', help='List projects')
     parser_projects.set_defaults(func='list_projects')
+
+    # Project details command
+    parser_project = subparsers.add_parser('project', help='Project details')
+    parser_project.add_argument('id', metavar='project ID', help='ID of project: required')
+    parser_project.set_defaults(func='project_details')
 
     # Project task list command
     parser_projecttasks = subparsers.add_parser('projecttasks', help='List project tasks')

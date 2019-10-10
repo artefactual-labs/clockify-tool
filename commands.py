@@ -184,3 +184,17 @@ def cache_statistics(args, config, app_data):
             shutil.rmtree(cache_dir)
     else:
         print('Cache is empty.')
+
+def project_details(args, config, app_data):
+    project_data = app_data['clockify'].get_project(args.id)
+
+    print("Name: " + project_data['name'])
+
+    if 'clientName' in project_data:
+        print("Client: " + project_data['clientName'])
+
+    print()
+    print("Tasks:")
+
+    for project in app_data['clockify'].project_tasks(args.id):
+        print('* {} [{}]'.format(project['name'].encode('utf-8'), project['id']))
