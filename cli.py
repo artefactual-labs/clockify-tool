@@ -17,7 +17,8 @@ def preprocess_argv():
             'w': 'workspaces',
             'p': 'projects',
             'pd': 'project',
-            'pt': 'projecttasks'
+            'pt': 'projecttasks',
+            't': 'task'
         }
 
         if argv[0] in command_abbreviations:
@@ -89,6 +90,11 @@ def arg_parser():
     parser_projecttasks = subparsers.add_parser('projecttasks', help='List project tasks')
     parser_projecttasks.add_argument('id', metavar='project ID', help='ID of project: required')
     parser_projecttasks.set_defaults(func='list_project_tasks')
+
+    # Task details command
+    parser_task = subparsers.add_parser('task', help='Task details')
+    parser_task.add_argument('id', metavar='task ID', help='ID of task: required')
+    parser_task.set_defaults(func='task_details')
 
     # Cache command
     parser_cache = subparsers.add_parser('cache', help='Cache status/management')

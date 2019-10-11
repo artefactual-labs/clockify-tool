@@ -198,3 +198,9 @@ def project_details(args, config, app_data):
 
     for project in app_data['clockify'].project_tasks(args.id):
         print('* {} [{}]'.format(project['name'].encode('utf-8'), project['id']))
+
+def task_details(args, config, app_data):
+    task_data = app_data['clockify'].get_task(args.id)
+
+    print('Name: ' + task_data['name'])
+    print('Project ID: ' + task_data['projectId'])

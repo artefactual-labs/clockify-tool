@@ -268,3 +268,9 @@ class ClockifyApi(Iso8601DateConverter):
             return tasks[0]['projectId']
         else:
             return None
+
+    def get_task(self, id):
+        project_id = self.get_task_project_id(id)
+        url = self.url + 'workspaces/' + self.workspace + '/projects/' + project_id + '/tasks/' + id + '/'
+        response = requests.get(url, headers=self.headers)
+        return response.json()
