@@ -175,16 +175,19 @@ For example:
     * Meetings [5cdb08ead278ae206156ae6f]
 
 
-### List project tasks
+### Project details
 
-The `projecttasks` (or `pt`) command is used to list project tasks. The project
-task name and ID will be output.
+The `project` (or `pd`) command is used to display details about a project,
+including a list of tasks for it.
 
 For example:
 
-    $ ./cft projecttasks ed5c600955e74cce9648cd91
-    * Design [3539934f65f84a5fb98a2604]
-    * Implementation [cafcd3051c5c46c89e2ec4cb]
+    $ ./cft project ed5c600955e74cce9648cd91
+    Name: Example Company - Hosting
+    Client: Example
+    
+    Tasks:
+    * Support [5d8bff9dad3d0047ca62e3fd]
 
 
 ### Creating a time entry
