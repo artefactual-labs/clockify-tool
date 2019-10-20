@@ -17,7 +17,7 @@ def preprocess_argv():
             'w': 'workspaces',
             'p': 'projects',
             'pd': 'project',
-            't': 'task'
+            'td': 'task'
         }
 
         if argv[0] in command_abbreviations:

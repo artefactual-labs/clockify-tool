@@ -194,6 +194,17 @@ For example:
     * Support [5d8bff9dad3d0047ca62e3fd]
 
 
+### Task details
+
+The `task` (or `td`) command is used to display details about a task.
+
+For example:
+
+    $ ./cft task 5d8bff9dad3d0047ca62e3fd
+    Name: Support
+    Project ID: ed5c600955e74cce9648cd91
+
+
 ### Creating a time entry
 
 The `new` (or `n`) command is used to create a new time entry. The number of
