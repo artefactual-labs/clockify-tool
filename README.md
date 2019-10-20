@@ -122,6 +122,10 @@ In the output each line under "Time entries" that begins with a `*` is a time
 entry. The time entry's description is first shown, then the entry's project
 name and ID, then the hours spent and the time entry's ID.
 
+To get more information, per time entry, the `--verbose` (or `-v`) option can
+be used. This will display date and time for each entry as well as the parent
+project of any entry that is associated with a task rather than a project.
+
 Here's an example of listing yesterday's time entries:
 
     $ ./cft list yesterday
