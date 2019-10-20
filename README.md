@@ -96,12 +96,12 @@ Help for the list command:
       -e end date, --end end date
       -v, --verbose
     
-    Available periods: "previouspayperiod" ("pp"): previous pay period,
-    "fullcurrentweek" ("fcw"): current full week (Sunday to Saturday),
-    "fulllastweek" ("flw"): last full week (Sunday to Saturday), "lastweek"
-    ("lw"): last work week (Monday to Friday), "yesterday" ("y"): day before
-    today, "currentpayperiod" ("cp"): current pay period, "currentweek" ("cw"):
-    current work week (Monday to Friday)
+    Available periods: "daybeforeyesterday" ("dby"): day before yesterday,
+    "lastweek" ("lw"): last work week (Monday to Friday), "previouspayperiod"
+    ("pp"): previous pay period, "fullcurrentweek" ("fcw"): current full week
+    (Sunday to Saturday), "yesterday" ("y"): day before today, "currentpayperiod"
+    ("cp"): current pay period, "currentweek" ("cw"): current work week (Monday to
+    Friday), "fulllastweek" ("flw"): last full week (Sunday to Saturday)
 
 Example list of today's time entries:
 
