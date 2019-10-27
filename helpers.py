@@ -19,12 +19,12 @@ PERIOD_DAYS = 14
 PERIOD_FIRST_DAY = date(2019, 7, 6)  # Known first day of period.
 
 
-def time_entry_list(from_date, to_date, clockify, verbose=False):
+def time_entry_list(from_date, to_date, clockify, strict=False, verbose=False):
     print("Fetching time entries from {} to {}...".format(from_date, to_date))
     print()
 
     # Get yesterday's time entries
-    time_entries = clockify.entries(start=from_date + 'T00:00:00', end=to_date + 'T23:59:59')
+    time_entries = clockify.entries(start=from_date + 'T00:00:00', end=to_date + 'T23:59:59', strict=strict)
 
     if time_entries:
         sum = 0

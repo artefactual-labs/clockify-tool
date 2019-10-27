@@ -122,6 +122,10 @@ In the output each line under "Time entries" that begins with a `*` is a time
 entry. The time entry's description is first shown, then the entry's project
 name and ID, then the hours spent and the time entry's ID.
 
+The default behavior of the list command is to display all time entries with a
+start date that's within a date range. When the `--strict` option is used,
+however, both the start date and end date must be within the date range.
+
 To get more information, per time entry, the `--verbose` (or `-v`) option can
 be used. This will display date and time for each entry as well as the parent
 project of any entry that is associated with a task rather than a project.

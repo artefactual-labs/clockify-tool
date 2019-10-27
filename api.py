@@ -216,7 +216,7 @@ class ClockifyApi(Iso8601DateConverter):
         url = self.url + 'workspaces/' + self.workspace + '/timeEntries/' + id + '/'
         return requests.delete(url, headers=self.headers)
 
-    def entries(self, start=None, end=None):
+    def entries(self, start=None, end=None, strict=False):
         data = {'me': 'true'}
 
         if start:
@@ -241,7 +241,12 @@ class ClockifyApi(Iso8601DateConverter):
         entries = []
 
         for entry in response_data['timeEntries']:
-            if entry['timeInterval']['start'] >= data['startDate'] and entry['timeInterval']['start'] <= data['endDate']:
+            if strict:
+                included = entry['timeInterval']['end'] <= data['endDate']
+            else:
+                included = entry['timeInterval']['start'] <= data['endDate']
+
+            if included:
                 entries.append(entry)
 
                 # Cache entry in case user wants to later update event

@@ -41,7 +41,7 @@ def list_entries(args, config, app_data):
         from_date = period['start']
         to_date = period['end']
 
-    helpers.time_entry_list(from_date, to_date, app_data['clockify'], args.verbose)
+    helpers.time_entry_list(from_date, to_date, app_data['clockify'], args.strict, args.verbose)
 
 
 def new_entry(args, config, app_data):
