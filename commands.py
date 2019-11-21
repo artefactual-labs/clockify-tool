@@ -90,7 +90,7 @@ def update_entry(args, config, app_data):
 
     updated_entry = app_data['clockify'].cache.generate_update_entry(args.id, comments=args.comments, date=args.date, hours=updated_hours)
 
-    cached_entry['timeInterval']['duration'] = isodate.duration_isoformat(dateutil.parser.parse(updated_entry['end']) - dateutil.parser.parse(updated_entry['start']))
+    cached_entry['timeInterval']['duration'] = app_data['clockify'].cache.iso_duration_from_iso_8601_dates(updated_entry['start'], updated_entry['end'])
     cached_entry['timeInterval']['end'] = updated_entry['end']
 
     # Update description, if necessary
