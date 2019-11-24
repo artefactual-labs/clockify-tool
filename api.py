@@ -72,10 +72,15 @@ class ClockifyEntryCacheManager(Iso8601DateConverter):
 
         cached_entry['project'] = {'id': cached_entry['projectId']}
         del cached_entry['projectId']
+
+        if 'taskId' in cached_entry:
+            cached_entry['task'] = {'id': cached_entry['taskId']}
+        else:
+            cached_entry['task'] = None
+        del cached_entry['taskId']
+
         cached_entry['tags'] = None
         del cached_entry['tagIds']
-        cached_entry['task'] = None
-        del cached_entry['taskId']
 
         self.create_from_entry(cached_entry)
 
