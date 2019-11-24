@@ -212,9 +212,26 @@ class ClockifyApi(Iso8601DateConverter):
         return response_data
 
     # entry argument must be in UpdateTimeEntryRequest format (see Clockify API documentation)
-    def update_entry(self, entry):
+    def update_entry(self, entry, cached_entry=None):
         url = self.url + 'workspaces/' + self.workspace + '/timeEntries/' + entry['id'] + '/'
-        return requests.put(url, data=json.dumps(entry), headers=self.headers)
+        response = requests.put(url, data=json.dumps(entry), headers=self.headers)
+
+        if response.status_code == 200 and cached_entry:
+            if 'description' in entry:
+                cached_entry['description'] = entry['description']
+
+            if 'start' in entry:
+                cached_entry['timeInterval']['start'] = entry['start']
+
+            if 'end' in entry:
+                cached_entry['timeInterval']['end'] = entry['end']
+
+            iso_duration = self.cache.iso_duration_from_iso_8601_dates(cached_entry['timeInterval']['start'], cached_entry['timeInterval']['end'])
+            cached_entry['timeInterval']['duration'] = iso_duration
+
+            self.cache.create_from_entry(cached_entry)
+
+        return response
 
     def delete_entry(self, id):
         url = self.url + 'workspaces/' + self.workspace + '/timeEntries/' + id + '/'

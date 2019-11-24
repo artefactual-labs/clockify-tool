@@ -90,20 +90,15 @@ def update_entry(args, config, app_data):
 
     updated_entry = app_data['clockify'].cache.generate_update_entry(args.id, comments=args.comments, date=args.date, hours=updated_hours)
 
-    cached_entry['timeInterval']['duration'] = app_data['clockify'].cache.iso_duration_from_iso_8601_dates(updated_entry['start'], updated_entry['end'])
-    cached_entry['timeInterval']['end'] = updated_entry['end']
-
     # Update description, if necessary
     if args.comments and args.comments != cached_entry['description']:
         changed = True
-        cached_entry['description'] = args.comments
         print('Changing comments to: ' + args.comments)
 
     # Append to description, if necesary
     if args.append:
         changed = True
         updated_entry['description'] = updated_entry['description'] + ' ' + args.append
-        cached_entry['description'] = updated_entry['description']
         print('Appended to comments: ' + args.append)
 
     # Update start date, if necessary
@@ -113,15 +108,13 @@ def update_entry(args, config, app_data):
 
         if cached_date_local.date() != update_date_local.date():
             changed = True
-            cached_entry['timeInterval']['start'] = updated_entry['start']
             print('Changing date to ' + args.date)
 
     if changed:
         # Perform update via API
-        response = app_data['clockify'].update_entry(updated_entry)
+        response = app_data['clockify'].update_entry(updated_entry, cached_entry)
 
         if response.status_code == 200:
-            app_data['clockify'].cache.create_from_entry(cached_entry)
             print(helpers.entry_bullet_point(app_data['clockify'], cached_entry))
             print('Time entry updated.')
         else:
