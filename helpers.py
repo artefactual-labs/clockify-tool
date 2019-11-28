@@ -1,4 +1,5 @@
 from __future__ import print_function
+import calendar
 from datetime import date, datetime, timedelta
 
 
@@ -9,6 +10,7 @@ PERIODS = {
   'cw': {'name': 'currentweek', 'description': 'current work week (Monday to Friday)'},
   'flw': {'name': 'fulllastweek', 'description': 'last full week (Sunday to Saturday)'},
   'fcw': {'name': 'fullcurrentweek', 'description': 'current full week (Sunday to Saturday)'},
+  'cm': {'name': 'currentmonth', 'description': 'current month'},
   'cp': {'name': 'currentpayperiod', 'description': 'current pay period'},
   'pp': {'name': 'previouspayperiod', 'description': 'previous pay period'},
 }
@@ -142,8 +144,18 @@ def resolve_period(period):
         end_date = weekday_of_week(5)  # this Saturday
         return {'start': start_date, 'end': end_date}
 
-    # Payroll periods
     today = date.today()
+
+    if period == 'currentmonth':
+        year_and_month = datetime.today().strftime('%Y-%m')
+        start_date = year_and_month + '-01'
+
+        _, days_in_month = calendar.monthrange(today.year, today.month)
+        end_date = year_and_month + '-' + str(days_in_month)
+
+        return {'start': start_date, 'end': end_date}
+
+    # Payroll periods
     past_days = (today - PERIOD_FIRST_DAY).days % PERIOD_DAYS
     if period == 'currentpayperiod':
         start_date = today - timedelta(days=past_days)
