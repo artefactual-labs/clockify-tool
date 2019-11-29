@@ -10,6 +10,7 @@ PERIODS = {
   'cw': {'name': 'currentweek', 'description': 'current work week (Monday to Friday)'},
   'flw': {'name': 'fulllastweek', 'description': 'last full week (Sunday to Saturday)'},
   'fcw': {'name': 'fullcurrentweek', 'description': 'current full week (Sunday to Saturday)'},
+  'lm': {'name': 'lastmonth', 'description': 'last month'},
   'cm': {'name': 'currentmonth', 'description': 'current month'},
   'cp': {'name': 'currentpayperiod', 'description': 'current pay period'},
   'pp': {'name': 'previouspayperiod', 'description': 'previous pay period'},
@@ -145,6 +146,16 @@ def resolve_period(period):
         return {'start': start_date, 'end': end_date}
 
     today = date.today()
+
+    if period == 'lastmonth':
+        first = today.replace(day=1)
+        last_month = first - timedelta(days=1)
+        last_year_and_month = last_month.strftime("%Y-%m")
+
+        start_date = last_year_and_month + '-01'
+        end_date = last_year_and_month + '-' + str(last_month.day)
+
+        return {'start': start_date, 'end': end_date}
 
     if period == 'currentmonth':
         year_and_month = datetime.today().strftime('%Y-%m')
