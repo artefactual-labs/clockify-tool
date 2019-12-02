@@ -2,8 +2,6 @@ from __future__ import print_function
 from datetime import date
 import shutil
 import os
-import dateutil
-import isodate
 import helpers
 
 
@@ -173,6 +171,7 @@ def cache_statistics(args, config, app_data):
     else:
         print('Cache is empty.')
 
+
 def project_details(args, config, app_data):
     project_data = app_data['clockify'].get_project(args.id)
 
@@ -186,6 +185,7 @@ def project_details(args, config, app_data):
 
     for project in app_data['clockify'].project_tasks(args.id):
         print('* {} [{}]'.format(project['name'].encode('utf-8'), project['id']))
+
 
 def task_details(args, config, app_data):
     task_data = app_data['clockify'].get_task(args.id)

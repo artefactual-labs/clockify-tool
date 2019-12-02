@@ -281,7 +281,7 @@ class ClockifyApi(Iso8601DateConverter):
         return entries
 
     def get_project(self, id):
-        url = self.url + 'workspaces/' + self.workspace + '/projects/' + id +'/'
+        url = self.url + 'workspaces/' + self.workspace + '/projects/' + id + '/'
         response = requests.get(url, headers=self.headers)
         return response.json()
 

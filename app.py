@@ -1,7 +1,6 @@
 from __future__ import print_function
 import os
 import yaml
-import helpers
 
 
 def load_config():
