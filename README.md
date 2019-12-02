@@ -85,7 +85,7 @@ can also list projects, project tasks, and workspaces to find out their IDs.
 Help for the list command:
 
     $ ./cft list -h
-    usage: cft list [-h] [-s start date] [-e end date] [-v] [period]
+    usage: cft list [-h] [-s start date] [-e end date] [--strict] [-v] [period]
     
     positional arguments:
       period                time period: optional, overrides -s and -e
@@ -94,13 +94,15 @@ Help for the list command:
       -h, --help            show this help message and exit
       -s start date, --start start date
       -e end date, --end end date
+      --strict
       -v, --verbose
     
     Available periods: "daybeforeyesterday" ("dby"): day before yesterday,
     "lastweek" ("lw"): last work week (Monday to Friday), "previouspayperiod"
-    ("pp"): previous pay period, "fullcurrentweek" ("fcw"): current full week
-    (Sunday to Saturday), "yesterday" ("y"): day before today, "currentpayperiod"
-    ("cp"): current pay period, "currentweek" ("cw"): current work week (Monday to
+    ("pp"): previous pay period, "currentpayperiod" ("cp"): current pay period,
+    "currentmonth" ("cm"): current month, "fullcurrentweek" ("fcw"): current full
+    week (Sunday to Saturday), "yesterday" ("y"): day before today, "lastmonth"
+    ("lm"): last month, "currentweek" ("cw"): current work week (Monday to
     Friday), "fulllastweek" ("flw"): last full week (Sunday to Saturday)
 
 Example list of today's time entries:
