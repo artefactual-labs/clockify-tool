@@ -1,3 +1,4 @@
+future
 isodate
 python-dateutil
 PyYAML

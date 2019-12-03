@@ -1,4 +1,6 @@
 from __future__ import print_function
+from __future__ import unicode_literals
+from builtins import str
 import calendar
 from datetime import date, datetime, timedelta
 
@@ -51,9 +53,9 @@ def entry_bullet_point(clockify, entry, verbose=False):
 
     if verbose:
         local_date_and_time = clockify.cache.utc_iso_8601_string_to_local_datatime_string(entry['timeInterval']['start'])
-        item += '{} - '.format(local_date_and_time)
+        item += '{} - '.format(str(local_date_and_time))
 
-    item += '{}'.format(entry['description'])
+    item += '{}'.format(str(entry['description']))
 
     if 'project' in entry and 'name' in entry['project']:
         if 'task' in entry and entry['task'] is not None and 'name' in entry['task']:
