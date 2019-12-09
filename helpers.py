@@ -14,6 +14,8 @@ PERIODS = {
   'fcw': {'name': 'fullcurrentweek', 'description': 'current full week (Sunday to Saturday)'},
   'lm': {'name': 'lastmonth', 'description': 'last month'},
   'cm': {'name': 'currentmonth', 'description': 'current month'},
+  'ly': {'name': 'lastyear', 'description': 'last year'},
+  'cy': {'name': 'currentyear', 'description': 'current year'},
   'cp': {'name': 'currentpayperiod', 'description': 'current pay period'},
   'pp': {'name': 'previouspayperiod', 'description': 'previous pay period'},
 }
@@ -165,6 +167,18 @@ def resolve_period(period):
 
         _, days_in_month = calendar.monthrange(today.year, today.month)
         end_date = year_and_month + '-' + str(days_in_month)
+
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'lastyear':
+        start_date = '{}-01-01'.format(str(today.year - 1))
+        end_date = '{}-12-31'.format(str(today.year - 1))
+
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'currentyear':
+        start_date = '{}-01-01'.format(str(today.year))
+        end_date = '{}-12-31'.format(str(today.year))
 
         return {'start': start_date, 'end': end_date}
 

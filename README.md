@@ -97,13 +97,14 @@ Help for the list command:
       --strict
       -v, --verbose
     
-    Available periods: "daybeforeyesterday" ("dby"): day before yesterday,
-    "lastweek" ("lw"): last work week (Monday to Friday), "previouspayperiod"
-    ("pp"): previous pay period, "currentpayperiod" ("cp"): current pay period,
-    "currentmonth" ("cm"): current month, "fullcurrentweek" ("fcw"): current full
-    week (Sunday to Saturday), "yesterday" ("y"): day before today, "lastmonth"
-    ("lm"): last month, "currentweek" ("cw"): current work week (Monday to
-    Friday), "fulllastweek" ("flw"): last full week (Sunday to Saturday)
+    Available periods: "currentmonth" ("cm"): current month, "fullcurrentweek"
+    ("fcw"): current full week (Sunday to Saturday), "daybeforeyesterday" ("dby"):
+    day before yesterday, "currentyear" ("cy"): current year, "currentpayperiod"
+    ("cp"): current pay period, "currentweek" ("cw"): current work week (Monday to
+    Friday), "previouspayperiod" ("pp"): previous pay period, "lastmonth" ("lm"):
+    last month, "fulllastweek" ("flw"): last full week (Sunday to Saturday),
+    "lastweek" ("lw"): last work week (Monday to Friday), "yesterday" ("y"): day
+    before today, "lastyear" ("ly"): last year
 
 Example list of today's time entries:
 
