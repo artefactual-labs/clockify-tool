@@ -158,11 +158,12 @@ class ClockifyApi(Iso8601DateConverter):
         self.workspace = id
 
     def workspaces(self):
-        response = requests.get(self.url + 'workspaces/', headers=self.headers)
+        url = "{}workspaces/".format(self.url)
+        response = requests.get(url, headers=self.headers)
         return response.json()
 
     def projects(self):
-        url = self.url + 'workspaces/' + self.workspace + '/projects/'
+        url = "{}workspaces/{}/projects/".format(self.url, self.workspace)
         response = requests.get(url, headers=self.headers)
         return response.json()
 
@@ -205,7 +206,7 @@ class ClockifyApi(Iso8601DateConverter):
             "tagIds": []
         }
 
-        url = self.url + 'workspaces/' + self.workspace + '/timeEntries/'
+        url = "{}workspaces/{}/timeEntries/".format(self.url, self.workspace)
         response = self.post(url, data)
 
         # Cache entry if entry was created
@@ -218,7 +219,7 @@ class ClockifyApi(Iso8601DateConverter):
 
     # entry argument must be in UpdateTimeEntryRequest format (see Clockify API documentation)
     def update_entry(self, entry, cached_entry=None):
-        url = self.url + 'workspaces/' + self.workspace + '/timeEntries/' + entry['id'] + '/'
+        url = "{}workspaces/{}/timeEntries/{}/".format(self.url, self.workspace, entry['id'])
         response = requests.put(url, data=json.dumps(entry), headers=self.headers)
 
         if response.status_code == 200 and cached_entry:
@@ -239,7 +240,7 @@ class ClockifyApi(Iso8601DateConverter):
         return response
 
     def delete_entry(self, id):
-        url = self.url + 'workspaces/' + self.workspace + '/timeEntries/' + id + '/'
+        url = "{}workspaces/{}/timeEntries/{}/".format(self.url, self.workspace, id)
         return requests.delete(url, headers=self.headers)
 
     def entries(self, start=None, end=None, strict=False):
@@ -258,7 +259,7 @@ class ClockifyApi(Iso8601DateConverter):
         data['tagIds'] = []
         data['billable'] = 'BOTH'
 
-        url = self.url + 'workspaces/' + self.workspace + '/reports/summary/'
+        url = "{}workspaces/{}/reports/summary".format(self.url, self.workspace)
         response = self.post(url, data)
 
         # work around API issue by manually culling entries out of date/time range
@@ -281,17 +282,17 @@ class ClockifyApi(Iso8601DateConverter):
         return entries
 
     def get_project(self, id):
-        url = self.url + 'workspaces/' + self.workspace + '/projects/' + id + '/'
+        url = "{}workspaces/{}/projects/{}/".format(self.url, self.workspace, id)
         response = requests.get(url, headers=self.headers)
         return response.json()
 
     def project_tasks(self, id):
-        url = self.url + 'workspaces/' + self.workspace + '/projects/' + id + '/tasks/'
+        url = "{}workspaces/{}/projects/{}/tasks/".format(self.url, self.workspace, id)
         response = requests.get(url, headers=self.headers)
         return response.json()
 
     def get_task_project_id(self, id):
-        url = self.url + 'workspaces/' + self.workspace + '/projects/taskIds/'
+        url = "{}workspaces/{}/projects/taskIds/".format(self.url, self.workspace)
         data = {'ids': [id]}
         tasks = self.post(url, data).json()
 
@@ -302,6 +303,6 @@ class ClockifyApi(Iso8601DateConverter):
 
     def get_task(self, id):
         project_id = self.get_task_project_id(id)
-        url = self.url + 'workspaces/' + self.workspace + '/projects/' + project_id + '/tasks/' + id + '/'
+        url = "{}workspaces/{}/projects/{}/tasks/{}/".format(self.url, self.workspace, project_id, id)
         response = requests.get(url, headers=self.headers)
         return response.json()

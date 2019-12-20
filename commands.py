@@ -84,20 +84,20 @@ def update_entry(args, config, app_data):
     if args.hours and (helpers.contains_calculation(args.hours) or cached_hours != float(args.hours)):
         changed = True
         updated_hours = helpers.handle_hours_calculation_value(float(cached_hours), args.hours)
-        print('Changing hours from ' + str(cached_hours) + ' to: ' + str(updated_hours))
+        print("Changing hours from {} to: {}".format(str(cached_hours), str(updated_hours)))
 
     updated_entry = app_data['clockify'].cache.generate_update_entry(args.id, comments=args.comments, date=args.date, hours=updated_hours)
 
     # Update description, if necessary
     if args.comments and args.comments != cached_entry['description']:
         changed = True
-        print('Changing comments to: ' + args.comments)
+        print("Changing comments to: {}".format(args.comments))
 
     # Append to description, if necesary
     if args.append:
         changed = True
-        updated_entry['description'] = updated_entry['description'] + ' ' + args.append
-        print('Appended to comments: ' + args.append)
+        updated_entry['description'] += ' ' + args.append
+        print("Appended to comments: {}".format(args.append))
 
     # Update start date, if necessary
     if args.date:
@@ -106,7 +106,7 @@ def update_entry(args, config, app_data):
 
         if cached_date_local.date() != update_date_local.date():
             changed = True
-            print('Changing date to ' + args.date)
+            print("Changing date to {}".format(args.date))
 
     if changed:
         # Perform update via API
@@ -175,10 +175,10 @@ def cache_statistics(args, config, app_data):
 def project_details(args, config, app_data):
     project_data = app_data['clockify'].get_project(args.id)
 
-    print("Name: " + project_data['name'])
+    print("Name: {}".format(project_data['name']))
 
     if 'clientName' in project_data:
-        print("Client: " + project_data['clientName'])
+        print("Client: {}".format(project_data['clientName']))
 
     print()
     print("Tasks:")
@@ -190,5 +190,5 @@ def project_details(args, config, app_data):
 def task_details(args, config, app_data):
     task_data = app_data['clockify'].get_task(args.id)
 
-    print('Name: ' + task_data['name'])
-    print('Project ID: ' + task_data['projectId'])
+    print("Name: {}".format(task_data['name']))
+    print("Project ID: {}".format(task_data['projectId']))
