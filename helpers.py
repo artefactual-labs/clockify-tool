@@ -2,23 +2,24 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from builtins import str
 import calendar
+import collections
 from datetime import date, datetime, timedelta
 
 
-PERIODS = {
-  'y': {'name': 'yesterday', 'description': 'day before today'},
-  'dby': {'name': 'daybeforeyesterday', 'description': 'day before yesterday'},
-  'lw': {'name': 'lastweek', 'description': 'last work week (Monday to Friday)'},
-  'cw': {'name': 'currentweek', 'description': 'current work week (Monday to Friday)'},
-  'flw': {'name': 'fulllastweek', 'description': 'last full week (Sunday to Saturday)'},
-  'fcw': {'name': 'fullcurrentweek', 'description': 'current full week (Sunday to Saturday)'},
-  'lm': {'name': 'lastmonth', 'description': 'last month'},
-  'cm': {'name': 'currentmonth', 'description': 'current month'},
-  'ly': {'name': 'lastyear', 'description': 'last year'},
-  'cy': {'name': 'currentyear', 'description': 'current year'},
-  'cp': {'name': 'currentpayperiod', 'description': 'current pay period'},
-  'pp': {'name': 'previouspayperiod', 'description': 'previous pay period'},
-}
+PERIODS = collections.OrderedDict()
+
+PERIODS['y'] = {'name': 'yesterday', 'description': 'day before today'}
+PERIODS['dby'] = {'name': 'daybeforeyesterday', 'description': 'day before yesterday'}
+PERIODS['lw'] = {'name': 'lastweek', 'description': 'last work week (Monday to Friday)'}
+PERIODS['cw'] = {'name': 'currentweek', 'description': 'current work week (Monday to Friday)'}
+PERIODS['flw'] = {'name': 'fulllastweek', 'description': 'last full week (Sunday to Saturday)'}
+PERIODS['fcw'] = {'name': 'fullcurrentweek', 'description': 'current full week (Sunday to Saturday)'}
+PERIODS['lm'] = {'name': 'lastmonth', 'description': 'last month'}
+PERIODS['cm'] = {'name': 'currentmonth', 'description': 'current month'}
+PERIODS['ly'] = {'name': 'lastyear', 'description': 'last year'}
+PERIODS['cy'] = {'name': 'currentyear', 'description': 'current year'}
+PERIODS['cp'] = {'name': 'currentpayperiod', 'description': 'current pay period'}
+PERIODS['pp'] = {'name': 'previouspayperiod', 'description': 'previous pay period'}
 
 
 # Artefactual's pay period details
