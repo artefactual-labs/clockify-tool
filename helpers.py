@@ -140,57 +140,46 @@ def resolve_period(period):
     if period == 'lastweek':
         start_date = weekday_last_week(0)  # last Monday
         end_date = weekday_last_week(4)  # last Friday
-        return {'start': start_date, 'end': end_date}
 
     if period == 'currentweek':
         start_date = weekday_of_week(0)  # this Monday
         end_date = weekday_of_week(4)  # this Friday
-        return {'start': start_date, 'end': end_date}
 
     if period == 'fulllastweek':
         start_date = weekday_of_week(6, 2)  # last Sunday
         end_date = weekday_of_week(5, 1)  # last Saturday
-        return {'start': start_date, 'end': end_date}
 
     if period == 'fullcurrentweek':
         start_date = weekday_last_week(6)  # this Sunday
         end_date = weekday_of_week(5)  # this Saturday
-        return {'start': start_date, 'end': end_date}
 
     if period == 'monday':
         start_date = weekday_of_week(0) # this Monday
         end_date = start_date
-        return {'start': start_date, 'end': end_date}
 
     if period == 'tuesday':
         start_date = weekday_of_week(1) # this Tuesday
         end_date = start_date
-        return {'start': start_date, 'end': end_date}
 
     if period == 'wednesday':
         start_date = weekday_of_week(2) # this Wednesday
         end_date = start_date
-        return {'start': start_date, 'end': end_date}
 
     if period == 'thursday':
         start_date = weekday_of_week(3) # this Thursday
         end_date = start_date
-        return {'start': start_date, 'end': end_date}
 
     if period == 'friday':
         start_date = weekday_of_week(4) # this Friday
         end_date = start_date
-        return {'start': start_date, 'end': end_date}
 
     if period == 'saturday':
         start_date = weekday_of_week(5) # this Saturday
         end_date = start_date
-        return {'start': start_date, 'end': end_date}
 
     if period == 'sunday':
         start_date = weekday_of_week(-1) # this Sunday
         end_date = start_date
-        return {'start': start_date, 'end': end_date}
 
     today = date.today()
 
@@ -202,8 +191,6 @@ def resolve_period(period):
         start_date = last_year_and_month + '-01'
         end_date = last_year_and_month + '-' + str(last_month.day)
 
-        return {'start': start_date, 'end': end_date}
-
     if period == 'currentmonth':
         year_and_month = datetime.today().strftime('%Y-%m')
         start_date = year_and_month + '-01'
@@ -211,32 +198,31 @@ def resolve_period(period):
         _, days_in_month = calendar.monthrange(today.year, today.month)
         end_date = year_and_month + '-' + str(days_in_month)
 
-        return {'start': start_date, 'end': end_date}
-
     if period == 'lastyear':
         start_date = '{}-01-01'.format(str(today.year - 1))
         end_date = '{}-12-31'.format(str(today.year - 1))
-
-        return {'start': start_date, 'end': end_date}
 
     if period == 'currentyear':
         start_date = '{}-01-01'.format(str(today.year))
         end_date = '{}-12-31'.format(str(today.year))
 
-        return {'start': start_date, 'end': end_date}
-
     # Payroll periods
-    past_days = (today - PERIOD_FIRST_DAY).days % PERIOD_DAYS
-    if period == 'currentpayperiod':
-        start_date = today - timedelta(days=past_days)
-        end_date = today + timedelta(days=PERIOD_DAYS - past_days - 1)
-    elif period == 'previouspayperiod':
-        end_date = today - timedelta(days=past_days + 1)
-        start_date = end_date - timedelta(days=PERIOD_DAYS - 1)
-    return {
-        'start': start_date.strftime("%Y-%m-%d"),
-        'end': end_date.strftime("%Y-%m-%d")
-    }
+    if period.endswith('payperiod'):
+        past_days = (today - PERIOD_FIRST_DAY).days % PERIOD_DAYS
+
+        if period == 'currentpayperiod':
+            start_date = today - timedelta(days=past_days)
+            end_date = today + timedelta(days=PERIOD_DAYS - past_days - 1)
+        elif period == 'previouspayperiod':
+            end_date = today - timedelta(days=past_days + 1)
+            start_date = end_date - timedelta(days=PERIOD_DAYS - 1)
+
+        return {
+            'start': start_date.strftime("%Y-%m-%d"),
+            'end': end_date.strftime("%Y-%m-%d")
+        }
+
+    return {'start': start_date, 'end': end_date}
 
 
 def resolve_project_template(project_name, templates):
