@@ -18,6 +18,13 @@ PERIODS['lm'] = {'name': 'lastmonth', 'description': 'last month'}
 PERIODS['cm'] = {'name': 'currentmonth', 'description': 'current month'}
 PERIODS['ly'] = {'name': 'lastyear', 'description': 'last year'}
 PERIODS['cy'] = {'name': 'currentyear', 'description': 'current year'}
+PERIODS['mon'] = {'name': 'monday', 'description': 'Monday'}
+PERIODS['tue'] = {'name': 'tuesday', 'description': 'Tuesday'}
+PERIODS['wed'] = {'name': 'wednesday', 'description': 'Wednesday'}
+PERIODS['thu'] = {'name': 'thursday', 'description': 'Thursday'}
+PERIODS['fri'] = {'name': 'friday', 'description': 'Friday'}
+PERIODS['sat'] = {'name': 'saturday', 'description': 'Saturday'}
+PERIODS['sun'] = {'name': 'sunday', 'description': 'Sunday'}
 PERIODS['cp'] = {'name': 'currentpayperiod', 'description': 'current pay period'}
 PERIODS['pp'] = {'name': 'previouspayperiod', 'description': 'previous pay period'}
 
@@ -148,6 +155,41 @@ def resolve_period(period):
     if period == 'fullcurrentweek':
         start_date = weekday_last_week(6)  # this Sunday
         end_date = weekday_of_week(5)  # this Saturday
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'monday':
+        start_date = weekday_of_week(0) # this Monday
+        end_date = start_date
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'tuesday':
+        start_date = weekday_of_week(1) # this Tuesday
+        end_date = start_date
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'wednesday':
+        start_date = weekday_of_week(2) # this Wednesday
+        end_date = start_date
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'thursday':
+        start_date = weekday_of_week(3) # this Thursday
+        end_date = start_date
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'friday':
+        start_date = weekday_of_week(4) # this Friday
+        end_date = start_date
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'saturday':
+        start_date = weekday_of_week(5) # this Saturday
+        end_date = start_date
+        return {'start': start_date, 'end': end_date}
+
+    if period == 'sunday':
+        start_date = weekday_of_week(-1) # this Sunday
+        end_date = start_date
         return {'start': start_date, 'end': end_date}
 
     today = date.today()
