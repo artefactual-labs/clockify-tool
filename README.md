@@ -106,8 +106,12 @@ Help for the list command:
     "currentyear" ("cy"): current year, "monday" ("mon"): Monday, "tuesday"
     ("tue"): Tuesday, "wednesday" ("wed"): Wednesday, "thursday" ("thu"):
     Thursday, "friday" ("fri"): Friday, "saturday" ("sat"): Saturday, "sunday"
-    ("sun"): Sunday, "currentpayperiod" ("cp"): current pay period,
-    "previouspayperiod" ("pp"): previous pay period
+    ("sun"): Sunday, "lastmonday" ("lmon"): Last Monday, "lasttuesday" ("ltue"):
+    Last Tuesday, "lastwednesday" ("lwed"): Last Wednesday, "lastthursday"
+    ("lthu"): Last Thursday, "lastfriday" ("lfri"): Last Friday, "lastsaturday"
+    ("lsat"): Last Saturday, "lastsunday" ("lsun"): Last Sunday,
+    "currentpayperiod" ("cp"): current pay period, "previouspayperiod" ("pp"):
+    previous pay period
 
 Example list of today's time entries:
 

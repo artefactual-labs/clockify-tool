@@ -25,6 +25,13 @@ PERIODS['thu'] = {'name': 'thursday', 'description': 'Thursday'}
 PERIODS['fri'] = {'name': 'friday', 'description': 'Friday'}
 PERIODS['sat'] = {'name': 'saturday', 'description': 'Saturday'}
 PERIODS['sun'] = {'name': 'sunday', 'description': 'Sunday'}
+PERIODS['lmon'] = {'name': 'lastmonday', 'description': 'Last Monday'}
+PERIODS['ltue'] = {'name': 'lasttuesday', 'description': 'Last Tuesday'}
+PERIODS['lwed'] = {'name': 'lastwednesday', 'description': 'Last Wednesday'}
+PERIODS['lthu'] = {'name': 'lastthursday', 'description': 'Last Thursday'}
+PERIODS['lfri'] = {'name': 'lastfriday', 'description': 'Last Friday'}
+PERIODS['lsat'] = {'name': 'lastsaturday', 'description': 'Last Saturday'}
+PERIODS['lsun'] = {'name': 'lastsunday', 'description': 'Last Sunday'}
 PERIODS['cp'] = {'name': 'currentpayperiod', 'description': 'current pay period'}
 PERIODS['pp'] = {'name': 'previouspayperiod', 'description': 'previous pay period'}
 
@@ -178,7 +185,36 @@ def resolve_period(period):
         end_date = start_date
 
     if period == 'sunday':
-        start_date = weekday_of_week(-1) # this Sunday
+        start_date = weekday_of_week(6) # last Sunday
+        end_date = start_date
+
+    if period == 'lastmonday':
+        start_date = weekday_last_week(0) # last Monday
+        end_date = start_date
+
+    if period == 'lasttuesday':
+        start_date = weekday_last_week(1) # last Tuesday
+        end_date = start_date
+
+    if period == 'lastwednesday':
+        start_date = weekday_last_week(2) # last Wednesday
+        end_date = start_date
+
+    if period == 'lastthursday':
+        start_date = weekday_last_week(3) # last Thursday
+        end_date = start_date
+
+    if period == 'lastfriday':
+        start_date = weekday_last_week(4) # last Friday
+        end_date = start_date
+
+    if period == 'lastsaturday':
+        start_date = weekday_last_week(5) # last Saturday
+        end_date = start_date
+
+    if period == 'lastsunday':
+        start_date = weekday_last_week(6) # Sunday before last Sunday
+        #start_date = weekday_of_week(6, 1) # Sunday before last Sunday
         end_date = start_date
 
     today = date.today()
