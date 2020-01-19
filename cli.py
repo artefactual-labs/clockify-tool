@@ -135,7 +135,7 @@ def validate_args(parser, args, config):
     # Sanity-check hours, if set
     if 'hours' in args and args.hours:
         try:
-            float(args.hours)
+            hours = float(args.hours)
         except ValueError:
             parser.error('Invalid hours value.')
 

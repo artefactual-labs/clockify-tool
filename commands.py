@@ -47,6 +47,10 @@ def new_entry(args, config, app_data):
         print('Specifiy hours.')
         return
 
+    if float(args.hours) <= 0:
+        print('Hours value must be positive.')
+        return
+
     # Check if ID indicates a task rather than project
     task_id = None
     project_id = app_data['clockify'].get_task_project_id(args.id)
