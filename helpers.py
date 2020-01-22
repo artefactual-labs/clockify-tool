@@ -161,60 +161,59 @@ def resolve_period(period):
         end_date = weekday_of_week(5)  # this Saturday
 
     if period == 'monday':
-        start_date = weekday_of_week(0) # this Monday
+        start_date = weekday_of_week(0)  # this Monday
         end_date = start_date
 
     if period == 'tuesday':
-        start_date = weekday_of_week(1) # this Tuesday
+        start_date = weekday_of_week(1)  # this Tuesday
         end_date = start_date
 
     if period == 'wednesday':
-        start_date = weekday_of_week(2) # this Wednesday
+        start_date = weekday_of_week(2)  # this Wednesday
         end_date = start_date
 
     if period == 'thursday':
-        start_date = weekday_of_week(3) # this Thursday
+        start_date = weekday_of_week(3)  # this Thursday
         end_date = start_date
 
     if period == 'friday':
-        start_date = weekday_of_week(4) # this Friday
+        start_date = weekday_of_week(4)  # this Friday
         end_date = start_date
 
     if period == 'saturday':
-        start_date = weekday_of_week(5) # this Saturday
+        start_date = weekday_of_week(5)  # this Saturday
         end_date = start_date
 
     if period == 'sunday':
-        start_date = weekday_of_week(6) # last Sunday
+        start_date = weekday_of_week(6)  # last Sunday
         end_date = start_date
 
     if period == 'lastmonday':
-        start_date = weekday_last_week(0) # last Monday
+        start_date = weekday_last_week(0)  # last Monday
         end_date = start_date
 
     if period == 'lasttuesday':
-        start_date = weekday_last_week(1) # last Tuesday
+        start_date = weekday_last_week(1)  # last Tuesday
         end_date = start_date
 
     if period == 'lastwednesday':
-        start_date = weekday_last_week(2) # last Wednesday
+        start_date = weekday_last_week(2)  # last Wednesday
         end_date = start_date
 
     if period == 'lastthursday':
-        start_date = weekday_last_week(3) # last Thursday
+        start_date = weekday_last_week(3)  # last Thursday
         end_date = start_date
 
     if period == 'lastfriday':
-        start_date = weekday_last_week(4) # last Friday
+        start_date = weekday_last_week(4)  # last Friday
         end_date = start_date
 
     if period == 'lastsaturday':
-        start_date = weekday_last_week(5) # last Saturday
+        start_date = weekday_last_week(5)  # last Saturday
         end_date = start_date
 
     if period == 'lastsunday':
-        start_date = weekday_last_week(6) # Sunday before last Sunday
-        #start_date = weekday_of_week(6, 1) # Sunday before last Sunday
+        start_date = weekday_last_week(6)  # Sunday before last Sunday
         end_date = start_date
 
     today = date.today()
