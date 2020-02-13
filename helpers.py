@@ -4,6 +4,7 @@ from builtins import str
 import calendar
 import collections
 from datetime import date, datetime, timedelta
+import dateutil.parser
 
 
 PERIODS = collections.OrderedDict()
@@ -42,7 +43,13 @@ PERIOD_FIRST_DAY = date(2019, 7, 6)  # Known first day of period.
 
 
 def time_entry_list(from_date, to_date, clockify, strict=False, verbose=False):
-    print("Fetching time entries from {} to {}...".format(from_date, to_date))
+    from_date_description = '{} ({})'.format(from_date, date_string_to_weekday_string(from_date))
+    to_date_description = '{} ({})'.format(to_date, date_string_to_weekday_string(to_date))
+
+    if from_date == to_date:
+        print("Fetching time entries from {}...".format(from_date_description))
+    else:
+        print("Fetching time entries from {} to {}...".format(from_date_description, to_date_description))
     print()
 
     # Get yesterday's time entries
@@ -111,6 +118,10 @@ def handle_hours_calculation_value(current_hours, new_value_or_calculation):
         current_hours = float(new_value_or_calculation)
 
     return current_hours
+
+
+def date_string_to_weekday_string(date_string):
+    return dateutil.parser.parse(date_string).strftime('%A')
 
 
 def weekday_of_week(day_of_week, weeks_previous=0):
