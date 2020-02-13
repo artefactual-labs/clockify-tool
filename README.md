@@ -120,7 +120,7 @@ Example list of today's time entries:
 Here's example output:
 
     $ ./cft 
-    Fetching time entries from 2019-05-14 to 2019-05-14...
+    Fetching time entries from 2020-02-13 (Thursday)...
     
     Time entries:
     * Reading email. (Email: 5cdb08621080ec2d4a8e707e) [0.25 hours: 5cdb08bfb0798752b039c5ba]
