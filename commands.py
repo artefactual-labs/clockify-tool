@@ -44,7 +44,7 @@ def list_entries(args, config, app_data):
 
 def new_entry(args, config, app_data):
     if 'hours' not in args or not args.hours:
-        print('Specifiy hours.')
+        print('Specify hours.')
         return
 
     if float(args.hours) <= 0:
