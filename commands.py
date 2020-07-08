@@ -192,7 +192,5 @@ def project_details(args, config, app_data):
 
 
 def task_details(args, config, app_data):
-    task_data = app_data['clockify'].get_task(args.id)
-
-    print("Name: {}".format(task_data['name']))
-    print("Project ID: {}".format(task_data['projectId']))
+    project_id = app_data['clockify'].get_task_project_id(args.id)
+    print("Project ID: {}".format(project_id))
