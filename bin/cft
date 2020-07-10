@@ -2,10 +2,13 @@
 
 import os
 import sys
-from api import ClockifyApi
-import app
-import cli
-import commands
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+
+from clockifytool.api import ClockifyApi
+from clockifytool import app
+from clockifytool import cli
+from clockifytool import commands
 
 
 # Load configuration
