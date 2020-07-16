@@ -46,6 +46,7 @@ def arg_parser():
     entry_parser.add_argument('-c', '--comments', metavar='comments: required for new time entries', action='store')
     entry_parser.add_argument('-t', '--hours', metavar='hours spent: required for new time entries', action='store')
     entry_parser.add_argument('-d', '--date', metavar='date', action='store', help='defaults to today')
+    entry_parser.add_argument('-b', '--billable', action='store_true')
 
     # New entry command
     parser_new = subparsers.add_parser('new', help='Create new time entry', parents=[entry_parser])
@@ -57,6 +58,7 @@ def arg_parser():
     parser_update = subparsers.add_parser('update', help='Update time entry', parents=[entry_parser])
     parser_update.add_argument('id', metavar='entry ID', help='ID of time entry: required')
     parser_update.add_argument('-a', '--append', metavar='append: append text to comments', action='store')
+    parser_update.add_argument('-u', '--unbillable', action='store_true')
     parser_update.set_defaults(func='update_entry')
 
     # List command
@@ -131,6 +133,10 @@ def validate_args(parser, args, config):
 
     if 'end' in args and args.end:
         args.end = resolve_and_validate_date_value(args.end, parser)
+
+    # Don't allow both billable and unbillable options to be used at the same time
+    if ('billable' in args and args.billable) and ('unbillable' in args and args.unbillable):
+        parser.error("Both --billable and --unbillable can't be used at the same time.")
 
     # Sanity-check hours, if set
     if 'hours' in args and args.hours:

@@ -175,7 +175,7 @@ class ClockifyApi(Iso8601DateConverter):
 
         return date.replace(hour=hours, minute=minutes)
 
-    def create_entry(self, project, description, hours, date=None, start_time=None, task=None):
+    def create_entry(self, project, description, hours, date=None, start_time=None, billable=False, task=None):
         if not date:
             local_datetime = datetime.now()
 
@@ -199,7 +199,7 @@ class ClockifyApi(Iso8601DateConverter):
         data = {
             "start": start_date,
             "end": end_date,
-            "billable": "false",
+            "billable": billable,
             "description": description,
             "projectId": project,
             "taskId": task,
@@ -234,6 +234,9 @@ class ClockifyApi(Iso8601DateConverter):
 
             iso_duration = self.cache.iso_duration_from_iso_8601_dates(cached_entry['timeInterval']['start'], cached_entry['timeInterval']['end'])
             cached_entry['timeInterval']['duration'] = iso_duration
+
+            if 'billable' in entry:
+                cached_entry['billable'] = entry['billable']
 
             self.cache.create_from_entry(cached_entry)
 

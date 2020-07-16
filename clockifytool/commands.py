@@ -60,7 +60,7 @@ def new_entry(args, config, app_data):
     else:
         task_id = args.id
 
-    entry = app_data['clockify'].create_entry(project_id, args.comments, args.hours, args.date, args.start, task=task_id)
+    entry = app_data['clockify'].create_entry(project_id, args.comments, args.hours, args.date, args.start, args.billable, task=task_id)
 
     if 'message' in entry and 'code' in entry:
         print(entry['message'])
@@ -111,6 +111,17 @@ def update_entry(args, config, app_data):
         if cached_date_local.date() != update_date_local.date():
             changed = True
             print("Changing date to {}".format(args.date))
+
+    # Update billable status, if necessary
+    if args.billable and not cached_entry['billable']:
+        updated_entry['billable'] = True
+        changed = True
+        print('Setting to billable.')
+
+    if args.unbillable and cached_entry['billable']:
+        updated_entry['billable'] = False
+        changed = True
+        print('Setting to unbillable.')
 
     if changed:
         # Perform update via API

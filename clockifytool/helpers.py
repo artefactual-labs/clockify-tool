@@ -91,7 +91,12 @@ def entry_bullet_point(clockify, entry, verbose=False):
             item = item + ' ({}: {})'.format(entry['project']['name'], entry['project']['id'])
 
     hours = clockify.cache.iso_duration_to_hours(entry['timeInterval']['duration'])
-    item = item + ' [{} hours: {}]'.format(hours, entry['id'])
+    item = item + ' [{} hours: {}'.format(hours, entry['id'])
+
+    if entry['billable']:
+        item = item + ', billable'
+
+    item = item + ']'
 
     return item + "\n"
 
