@@ -228,7 +228,7 @@ Help for the new command:
 
     $ ./cft new -h
     usage: cft new [-h] [-c comments: required for new time entries]
-                   [-t hours spent: required for new time entries] [-d date]
+                   [-t hours spent: required for new time entries] [-d date] [-b]
                    [-s start time]
                    project ID
     
@@ -240,6 +240,7 @@ Help for the new command:
       -c comments: required for new time entries, --comments comments: required for new time entries
       -t hours spent: required for new time entries, --hours hours spent: required for new time entries
       -d date, --date date  defaults to today
+      -b, --billable
       -s start time, --start start time
 
 Here's an example (in which `5cb772f3f15c9857ee275d00` is the project ID:
@@ -280,7 +281,7 @@ Help for the update command:
     $ ./cft update -h
     usage: cft update [-h] [-c comments: required for new time entries]
                       [-t hours spent: required for new time entries] [-d date]
-                      [-a append: append text to comments]
+                      [-b] [-a append: append text to comments] [-u]
                       entry ID
     
     positional arguments:
@@ -291,7 +292,9 @@ Help for the update command:
       -c comments: required for new time entries, --comments comments: required for new time entries
       -t hours spent: required for new time entries, --hours hours spent: required for new time entries
       -d date, --date date  defaults to today
+      -b, --billable
       -a append: append text to comments, --append append: append text to comments
+      -u, --unbillable
 
 Here's an example (in which `5ce54a35a02987296634c98a` is the time entry's ID:
 
