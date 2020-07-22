@@ -2,7 +2,11 @@ from __future__ import print_function
 from datetime import date
 import shutil
 import os
-import helpers
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+
+from clockifytool import helpers
 
 
 def list_entries(args, config, app_data):

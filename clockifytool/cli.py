@@ -1,7 +1,11 @@
 import argparse
 import dateutil
+import os
 import sys
-import helpers
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+
+from clockifytool import helpers
 
 
 def preprocess_argv():
