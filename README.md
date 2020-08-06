@@ -32,7 +32,11 @@ Tested with Python 2.7 and 3. Will need to be tweaked to handle Unicode.
 Installation
 ------------
 
-Clone this repo, change into the repo directory, then enter the following
+Install via PyPi:
+
+    $ pip install clockifytool
+
+...Or clone this repo, change into the repo directory, then enter the following
 command:
 
     $ pip install -r requirements.txt
