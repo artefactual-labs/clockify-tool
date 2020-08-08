@@ -102,6 +102,10 @@ def arg_parser():
     parser_cache.add_argument('-f', '--flush', action='store_true')
     parser_cache.set_defaults(func='cache_statistics')
 
+    # Version commmand
+    parser_version = subparsers.add_parser('version', help='Display version')
+    parser_version.set_defaults(func='version')
+
     return parser
 
 
