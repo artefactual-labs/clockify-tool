@@ -7,8 +7,17 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
 from clockifytool.api import ClockifyApi
-from clockifytool import app, cli, commands
+from clockifytool import app, cli, commands, __version__ as VERSION
 
+
+# Parse CLI arguments
+parser = cli.arg_parser()
+args = parser.parse_args(cli.preprocess_argv())
+
+# Display version if need be (config might not exist yet)
+if args.command == 'version':
+    print('clockifytool version {}'.format(VERSION))
+    sys.exit(0)
 
 # Load configuration
 try:
@@ -30,13 +39,9 @@ if 'workspace' not in config:
 else:
     clockify.set_workspace(config['workspace'])
 
-# Parse CLI arguments
-parser = cli.arg_parser()
-args = parser.parse_args(cli.preprocess_argv())
+# Validate CLI arguments and execute command
 args = cli.validate_args(parser, args, config)
-
-# Execute command
-app_data = {'clockify': clockify}
-
 command_function = getattr(commands, args.func)
+
+app_data = {'clockify': clockify}
 command_function(args, config, app_data)

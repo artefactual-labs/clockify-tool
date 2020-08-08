@@ -104,7 +104,6 @@ def arg_parser():
 
     # Version commmand
     parser_version = subparsers.add_parser('version', help='Display version')
-    parser_version.set_defaults(func='version')
 
     return parser
 
