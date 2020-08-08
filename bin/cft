@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import os
 import sys
 
@@ -10,9 +11,12 @@ from clockifytool import app
 from clockifytool import cli
 from clockifytool import commands
 
-
 # Load configuration
-config = app.load_config()
+try:
+    config = app.load_config()
+except Exception as e:
+    print(str(e))
+    sys.exit(1)
 
 # Authenticate
 clockify = ClockifyApi(config['api key'])
