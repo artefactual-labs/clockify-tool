@@ -6,8 +6,7 @@ import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-from clockifytool import helpers
-from clockifytool import __version__ as VERSION
+from clockifytool import helpers, __version__ as VERSION
 
 
 def list_entries(args, config, app_data):

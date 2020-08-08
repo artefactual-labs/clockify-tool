@@ -7,9 +7,8 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
 from clockifytool.api import ClockifyApi
-from clockifytool import app
-from clockifytool import cli
-from clockifytool import commands
+from clockifytool import app, cli, commands
+
 
 # Load configuration
 try:
