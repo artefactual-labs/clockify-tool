@@ -21,7 +21,9 @@ def preprocess_argv():
             'w': 'workspaces',
             'p': 'projects',
             'pd': 'project',
-            'td': 'task'
+            'td': 'task',
+            '-v': 'version',
+            '--version': 'version'
         }
 
         if argv[0] in command_abbreviations:
@@ -43,6 +45,8 @@ def preprocess_argv():
 def arg_parser():
     """Return ArgumentParser for this application."""
     parser = argparse.ArgumentParser(description='Clockify client.')
+    parser.add_argument('-v', '--version', help='show version and exit', action='store_true')
+
     subparsers = parser.add_subparsers(dest='command')
 
     # Parent parser for entry-specific commands
