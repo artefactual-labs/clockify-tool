@@ -1,0 +1,4 @@
+-r base.txt
+
+flake8==5.0.4
+flake8-builtins==2.2.0

@@ -1,6 +1,1 @@
-future
-isodate
-python-dateutil
-PyYAML
-requests
-tzlocal
+-r requirements/base.txt

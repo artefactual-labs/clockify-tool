@@ -8,42 +8,20 @@ configuration`) to rapidly create time entries. For example if you regularly
 have a 15 minute scrum meeting you could create a "scrum" time entry template
 that allows you to add a time entry like this:
 
-    $ ./cft +scrum
+    ./cft +scrum
 
-
-Known issues
-------------
-
-Clockify's API requires that all important details about a time entry be
-provided when making a change to a time entry. Because of this `cft`, when
-you list or create time entries, caches these details. Given this if you list
-time entries in `cft`, change one of the listed time entries using Clockify's
-web UI, then change the same time entry using `cft` you'd lose the changes you
-make in the web UI. For this reason it's advised to stick to `cft` for time
-entry if you want to use `cft`. You can still safely use the web UI for
-searching, etc.
-
-Also note that, when updating existing time entries, start time can't yet be
-changed. This will likely be added in the future.
-
-Tested with Python 2.7 and 3. Will need to be tweaked to handle Unicode.
-
-
-Installation
-------------
+## Installation
 
 Install via PyPi:
 
-    $ pip install clockifytool
+    pip install clockifytool
 
 ...Or clone this repo, change into the repo directory, then enter the following
 command:
 
-    $ pip install -r requirements.txt
+    pip install -r requirements/base.txt
 
-
-Basic Configuration
--------------------
+## Basic Configuration
 
 To use `cft` you'll need to, in the Clockify web UI, click the "GENERATE"
 button on the "Personal settings" page to generate an API key. You'll then need
@@ -76,13 +54,10 @@ Read on to learn about the basic functionality of `cft` and, once you've got
 the hang of things, check out `Advanced Configuration` to learn how you can
 save time when entering new time entries.
 
-
-Commands
---------
+## Commands
 
 Clockify Tool allows you to list, create and delete Clockify time entries. You
 can also list projects, project tasks, and workspaces to find out their IDs.
-
 
 ### Listing time entries in a period of time
 
@@ -119,7 +94,7 @@ Help for the list command:
 
 Example list of today's time entries:
 
-    $ ./cft
+    ./cft
 
 Here's example output:
 
@@ -146,7 +121,7 @@ project of any entry that is associated with a task rather than a project.
 
 Here's an example of listing yesterday's time entries:
 
-    $ ./cft list yesterday
+    ./cft list yesterday
 
 Yesterday is one time period of a number of available time periods.
 
@@ -156,13 +131,12 @@ for "yesterday" is "y", for example.
 `cft` commands like "list" can have one letter abbreviations. So if you
 wanted to list yesterday's time entries you could enter:
 
-    $ ./cft l y
+    ./cft l y
 
 Another time saver: if you enter a time period, instead of a command, you'll
 get a list of entries in the time period:
 
-    $ ./cft y
-
+    ./cft y
 
 ### List time entries in an arbitrary date range
 
@@ -174,7 +148,7 @@ one that's omitted they will default to today's date.
 
 Example list of time entries in an arbitary date range:
 
-    $ ./cft l -s 2019-03-06 --e 2019-03-09
+    ./cft l -s 2019-03-06 --e 2019-03-09
 
 The `-` or `+` operators, as a prefix to a integeter represeting a number of
 days, can also be used to indicate a relative date.
@@ -182,8 +156,7 @@ days, can also be used to indicate a relative date.
 For example, if one wanted to list time entries created five days ago to the
 present day then one could use this command:
 
-    $ ./cft l -s -5
-
+    ./cft l -s -5
 
 ### List projects
 
@@ -195,7 +168,6 @@ For example:
     $ ./cft projects
     * Email [5cdb08621080ec2d4a8e707e]
     * Meetings [5cdb08ead278ae206156ae6f]
-
 
 ### Project details
 
@@ -211,7 +183,6 @@ For example:
     Tasks:
     * Support [5d8bff9dad3d0047ca62e3fd]
 
-
 ### Task details
 
 The `task` (or `td`) command is used to display details about a task.
@@ -221,7 +192,6 @@ For example:
     $ ./cft task 5d8bff9dad3d0047ca62e3fd
     Name: Support
     Project ID: ed5c600955e74cce9648cd91
-
 
 ### Creating a time entry
 
@@ -249,11 +219,11 @@ Help for the new command:
 
 Here's an example (in which `5cb772f3f15c9857ee275d00` is the project ID:
 
-    $ ./cft new 5cb772f3f15c9857ee275d00 --comments="Checking email." --hours=.25
+    ./cft new 5cb772f3f15c9857ee275d00 --comments="Checking email." --hours=.25
 
 Here's the same example in a briefer form.
 
-    $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25
+    ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25
 
 When specifying a date, the `+` or `-` operators are relative to the current
 date. If you create a time entry today that should be dated as yesteray you
@@ -261,74 +231,19 @@ could update it with `-1` as the date to fix.
 
 For example:
 
-    $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -d -1
+    ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -d -1
 
 If specifying a start time, using the `--start`/`-s` optional argument, the
 time should be specified in 24 hour time format.
 
 For example:
 
-    $ ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -s 13:15
+    ./cft n 5cb772f3f15c9857ee275d00 -c "Checking email." -t .25 -s 13:15
 
 Note that when adding a time entry the current time will be used as the start
 time unless a date and/or start time are specified. If a date is specified, but
 a start time isn't, then the start time will be midnight. If a start time is
 specified, however, then the specified start time will be used.
-
-
-### Updating a time entry
-
-The `update` (or `u`) command is used to update an existing time entry.
-
-Help for the update command:
-
-    $ ./cft update -h
-    usage: cft update [-h] [-c comments: required for new time entries]
-                      [-t hours spent: required for new time entries] [-d date]
-                      [-b] [-a append: append text to comments] [-u]
-                      entry ID
-    
-    positional arguments:
-      entry ID              ID of time entry: required
-    
-    optional arguments:
-      -h, --help            show this help message and exit
-      -c comments: required for new time entries, --comments comments: required for new time entries
-      -t hours spent: required for new time entries, --hours hours spent: required for new time entries
-      -d date, --date date  defaults to today
-      -b, --billable
-      -a append: append text to comments, --append append: append text to comments
-      -u, --unbillable
-
-Here's an example (in which `5ce54a35a02987296634c98a` is the time entry's ID:
-
-    $ ./cft update 5ce54a35a02987296634c98a --comments="Changed tires." --hours=1.5
-
-Comments can be amended, rather than replaced, using the `--append` option.
-
-For example:
-
-    $ ./cft u 5ce54a35a02987296634c98a -a "I also fixed the flux capacitor."
-
-When updating hours worked, the `+` or `-` operators can be used to increment
-or decrement the entry's current hours worked value.
-
-For example:
-
-    $ ./cft u 5ce54a35a02987296634c98a -t +.25
-
-When adjusting a date, the `+` or `-` operators are relative to the current
-date. If you added something today that should be dated as yesteray you could
-update it with `-1` as the date to fix.
-
-For example:
-
-    $ ./cft u 5ce54a35a02987296634c98a -d -1
-
-Note: make sure you read the intro to this README file so you know that there
-can be issues with updating time entries if you use both Clockify's web UI and
-`cft`.
-
 
 ### Deleting a time entry
 
@@ -336,8 +251,7 @@ The `delete` (or `d`) command is used to delete a time entry.
 
 Here's an example (in which `5cd64137b079870300a9c9e0` is the time entry ID:
 
-    $ ./cft delete 5cd64137b079870300a9c9e0
-
+    ./cft delete 5cd64137b079870300a9c9e0
 
 ### List workspaces
 
@@ -349,16 +263,13 @@ For example:
     $ ./cft workspaces
     * Client-Project-Task Workspace [4c31a29da059321c02e301e0]
 
-
 ### Cache status/flushing
 
 You probably won't need to use this, but it exists. The `cache` command is used
 to display how many time entries have been cached. The `--flush` (or `-f`) flag
 can be used to delete all cached time entries.
 
-
-Advanced configuration
-----------------------
+## Advanced configuration
 
 You can save time entering time entries by using advanced configuration.
 
@@ -375,7 +286,6 @@ Example:
         id: 4cb771f3f13c9855ee275d00
       meeting:
         id: meet
-
 
 ### Project time entry templates
 
@@ -402,12 +312,10 @@ overrride the --time command-line option.
 
 Example:
 
-    $ ./cft n scrum -t .5
+    ./cft n scrum -t .5
 
-
-Shortcuts and abbreviations
----------------------------
+### Shortcuts and abbreviations
 
 Example of quick addition of a time entry using a template:
 
-    $ ./cft +scrum
+    ./cft +scrum
