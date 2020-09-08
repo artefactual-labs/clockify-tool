@@ -55,8 +55,24 @@ class ClockifyEntryCacheManager(Iso8601DateConverter):
 
         return cache_dir
 
-    def get_cache_filepath(self, identifier):
+    def get_cache_filepath(self, identifier, prefix=None):
+
+        if prefix is not None:
+            identifier = prefix + '-' + identifier
+
         return os.path.join(self.get_cache_directory(), 'cft-{}'.format(identifier))
+
+    def create(self, data, identifier=None, prefix=None):
+        if identifier is None:
+            identifier = data['id']
+
+        filepath = self.get_cache_filepath(identifier, prefix)
+
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+
+        with open(filepath, 'w') as cache_file:
+            cache_file.write(json.dumps(data))
 
     def create_from_entry(self, entry):
         filepath = self.get_cache_filepath(entry['id'])
@@ -127,13 +143,13 @@ class ClockifyEntryCacheManager(Iso8601DateConverter):
 
         return updated_entry
 
-    def get_cached_entry(self, identifier):
-        filepath = self.get_cache_filepath(identifier)
+    def get_cached_entry(self, identifier, prefix=None):
+        filepath = self.get_cache_filepath(identifier, prefix)
 
         if not os.path.isfile(filepath):
             return
 
-        with open(self.get_cache_filepath(identifier)) as json_file:
+        with open(filepath) as json_file:
             return json.load(json_file)
 
 
@@ -143,7 +159,7 @@ class ClockifyApi(Iso8601DateConverter):
         super(ClockifyApi, self).__init__()
 
         if not url:
-            url = 'https://api.clockify.me/api/'
+            url = 'https://api.clockify.me/api/v1/'
 
         self.url = url
         self.key = apiKey
@@ -162,8 +178,19 @@ class ClockifyApi(Iso8601DateConverter):
         response = requests.get(url, headers=self.headers)
         return response.json()
 
-    def projects(self):
+    def projects(self, limit=None):
         url = "{}workspaces/{}/projects/".format(self.url, self.workspace)
+
+        params = {}
+
+        if limit is not None:
+            params['page-size'] = limit
+
+        response = requests.get(url, headers=self.headers, params=params)
+        return response.json()
+
+    def user(self):
+        url = "{}user/".format(self.url)
         response = requests.get(url, headers=self.headers)
         return response.json()
 
@@ -206,22 +233,23 @@ class ClockifyApi(Iso8601DateConverter):
             "tagIds": []
         }
 
-        url = "{}workspaces/{}/timeEntries/".format(self.url, self.workspace)
+        url = "{}workspaces/{}/time-entries/".format(self.url, self.workspace)
         response = self.post(url, data)
 
         # Cache entry if entry was created
-        response_data = response.json()
-
-        if 'projectId' in response_data:
-            self.cache.create_from_new_entry_response(response_data)
-
-        return response_data
+        return response.json()
 
     # entry argument must be in UpdateTimeEntryRequest format (see Clockify API documentation)
     def update_entry(self, entry, cached_entry=None):
-        url = "{}workspaces/{}/timeEntries/{}/".format(self.url, self.workspace, entry['id'])
+        entry['start'] = entry['timeInterval']['start']
+        entry['end'] = entry['timeInterval']['end']
+        print(str(entry))
+
+        url = "{}workspaces/{}/time-entries/{}/".format(self.url, self.workspace, entry['id'])
         response = requests.put(url, data=json.dumps(entry), headers=self.headers)
 
+        print(str(response))
+        """
         if response.status_code == 200 and cached_entry:
             if 'description' in entry:
                 cached_entry['description'] = entry['description']
@@ -239,14 +267,32 @@ class ClockifyApi(Iso8601DateConverter):
                 cached_entry['billable'] = entry['billable']
 
             self.cache.create_from_entry(cached_entry)
+        """
 
         return response
 
     def delete_entry(self, id):
-        url = "{}workspaces/{}/timeEntries/{}/".format(self.url, self.workspace, id)
+        url = "{}workspaces/{}/time-entries/{}/".format(self.url, self.workspace, id)
         return requests.delete(url, headers=self.headers)
 
     def entries(self, start=None, end=None, strict=False):
+        user = self.user()
+
+        params = {}
+
+        if start:
+            params['start'] = self.local_date_string_to_utc_iso_8601(start)
+        if end:
+            params['end'] = self.local_date_string_to_utc_iso_8601(end)
+
+        url = "{}workspaces/{}/user/{}/time-entries".format(self.url, self.workspace, user['id'])
+        response = requests.get(url, params=params, headers=self.headers)
+
+        response_data = response.json()
+
+        return response_data
+
+        """
         data = {'me': 'true'}
 
         if start:
@@ -283,9 +329,20 @@ class ClockifyApi(Iso8601DateConverter):
                 self.cache.create_from_entry(entry)
 
         return entries
+        """
 
     def get_project(self, id):
         url = "{}workspaces/{}/projects/{}/".format(self.url, self.workspace, id)
+        response = requests.get(url, headers=self.headers)
+        return response.json()
+
+    def get_task(self, projectId, taskId):
+        url = "{}workspaces/{}/projects/{}/tasks/{}/".format(self.url, self.workspace, projectId, taskId)
+        response = requests.get(url, headers=self.headers)
+        return response.json()
+
+    def get_entry(self, id):
+        url = "{}workspaces/{}/time-entries/{}".format(self.url, self.workspace, id)
         response = requests.get(url, headers=self.headers)
         return response.json()
 
@@ -293,13 +350,3 @@ class ClockifyApi(Iso8601DateConverter):
         url = "{}workspaces/{}/projects/{}/tasks/".format(self.url, self.workspace, id)
         response = requests.get(url, headers=self.headers)
         return response.json()
-
-    def get_task_project_id(self, id):
-        url = "{}workspaces/{}/projects/taskIds/".format(self.url, self.workspace)
-        data = {'ids': [id]}
-        tasks = self.post(url, data).json()
-
-        if tasks != []:
-            return tasks[0]['projectId']
-        else:
-            return None

@@ -57,12 +57,30 @@ def new_entry(args, config, app_data):
 
     # Check if ID indicates a task rather than project
     task_id = None
-    project_id = app_data['clockify'].get_task_project_id(args.id)
+    project_id = None
+
+    task = app_data['clockify'].cache.get_cached_entry(args.id, 'task')
+
+    # If task hasn't been cached, cache all project tasks
+    if task is None:
+        helpers.cache_workspace_tasks(app_data['clockify'])
+        task = app_data['clockify'].cache.get_cached_entry(args.id, 'task')
+
+    if task is not None:
+        project_id = task['projectId']
 
     if project_id is None:
         project_id = args.id
     else:
         task_id = args.id
+
+    # Set start time to default if date's different than current
+    # PUT INTO HELPER:
+    today_raw = date.today()
+    today = today_raw.strftime('%Y-%m-%d')
+
+    if args.date is not None and args.date != today and args.start is None:
+        args.start = '08:00:00'
 
     entry = app_data['clockify'].create_entry(project_id, args.comments, args.hours, args.date, args.start, args.billable, task=task_id)
 
@@ -75,10 +93,12 @@ def new_entry(args, config, app_data):
 
 
 def update_entry(args, config, app_data):
+    print("This subcommand currently needs to be updated.")
+    return
+
     changed = False
 
-    # Need to use cached time entry data because API doesn't support getting time entry data by ID
-    cached_entry = app_data['clockify'].cache.get_cached_entry(args.id)
+    cached_entry = app_data['clockify'].get_entry(args.id)
 
     if not cached_entry:
         print('Time entry does not exist or is not cached.')
@@ -94,11 +114,14 @@ def update_entry(args, config, app_data):
         updated_hours = helpers.handle_hours_calculation_value(float(cached_hours), args.hours)
         print("Changing hours from {} to: {}".format(str(cached_hours), str(updated_hours)))
 
-    updated_entry = app_data['clockify'].cache.generate_update_entry(args.id, comments=args.comments, date=args.date, hours=updated_hours)
+    updated_entry = cached_entry
 
     # Update description, if necessary
+    updated_entry['description'] = cached_entry['description']
+
     if args.comments and args.comments != cached_entry['description']:
         changed = True
+        updated_entry['description'] = args.comments
         print("Changing comments to: {}".format(args.comments))
 
     # Append to description, if necesary
@@ -109,12 +132,25 @@ def update_entry(args, config, app_data):
 
     # Update start date, if necessary
     if args.date:
+        cached_date = str(app_data['clockify'].utc_iso_8601_string_to_local_datetime(cached_entry['timeInterval']['start']))[:10]
+
+        if args.date != cached_date:
+            changed = True
+            updated_entry['timeInterval']['start'] = app_data['clockify'].local_date_string_to_utc_iso_8601(args.date)
+            updated_entry['timeInterval']['end'] = app_data['clockify'].add_hours_to_localized_datetime_and_convert_to_iso_8601(updated_entry['timeInterval']['start'], hours)
+            print("Changing date to {}".format(args.date))
+
+        """
         cached_date_local = app_data['clockify'].utc_iso_8601_string_to_local_datetime(cached_entry['timeInterval']['start'])
-        update_date_local = app_data['clockify'].utc_iso_8601_string_to_local_datetime(updated_entry['start'])
+        update_date_local = app_data['clockify'].utc_iso_8601_string_to_local_datetime(updated_entry['timeInterval']['start'])
+
+        print('CL:' + str(cached_date_local))
+        print('UL:' + str(update_date_local))
 
         if cached_date_local.date() != update_date_local.date():
             changed = True
             print("Changing date to {}".format(args.date))
+        """
 
     # Update billable status, if necessary
     if args.billable and not cached_entry['billable']:
@@ -128,6 +164,30 @@ def update_entry(args, config, app_data):
         print('Setting to unbillable.')
 
     if changed:
+
+
+
+        """
+        date = args.date
+        # Change UTC start date/time, if necessary
+        if date: # local date string
+            print('D0:' + date)
+            # Convert entry date to simple sting in local timezone
+            print(str(updated_entry))
+            original_date_localized = app_data['clockify'].utc_iso_8601_string_to_local_datetime(updated_entry['timeInterval']['start'])
+            original_date = original_date_localized.strftime('%Y-%m-%d')
+
+            if original_date != date:
+                print('D:' + str(app_data['clockify'].local_date_string_to_utc_iso_8601(date)))
+                #updated_entry['start'] = self.local_date_string_to_utc_iso_8601(date)
+
+        # Convert UTC start/time to localized datetime and use it to calculate ISO 8601 end date/time
+        start_datetime = dateutil.parser.parse(updated_entry['start'])
+        print('E:' + str(self.add_hours_to_localized_datetime_and_convert_to_iso_8601(start_datetime, hours)))
+        #updated_entry['end'] = self.add_hours_to_localized_datetime_and_convert_to_iso_8601(start_datetime, hours)
+        """
+
+
         # Perform update via API
         response = app_data['clockify'].update_entry(updated_entry, cached_entry)
 
@@ -167,7 +227,7 @@ def list_projects(args, config, app_data):
     project_names = []
     project_data = {}
 
-    for project in app_data['clockify'].projects():
+    for project in app_data['clockify'].projects(args.limit):
         project_names.append(project['name'])
         project_data[(project['name'])] = project
 
@@ -194,6 +254,10 @@ def cache_statistics(args, config, app_data):
 def project_details(args, config, app_data):
     project_data = app_data['clockify'].get_project(args.id)
 
+    if 'message' in project_data:
+        print(project_data['message'])
+        return
+
     print("Name: {}".format(project_data['name']))
 
     if 'clientName' in project_data:
@@ -207,5 +271,15 @@ def project_details(args, config, app_data):
 
 
 def task_details(args, config, app_data):
-    project_id = app_data['clockify'].get_task_project_id(args.id)
-    print("Project ID: {}".format(project_id))
+    task = app_data['clockify'].cache.get_cached_entry(args.id, 'task')
+
+    # If task hasn't been cached, cache all project tasks
+    if task is None:
+        helpers.cache_workspace_tasks(app_data['clockify'])
+        task = app_data['clockify'].cache.get_cached_entry(args.id, 'task')
+
+    if task is None:
+        print('Task not found.')
+    else:
+        print(str(task))
+        print("Project ID: {}".format(task['projectId']))

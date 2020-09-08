@@ -89,6 +89,7 @@ def arg_parser():
 
     # Projects command
     parser_projects = subparsers.add_parser('projects', help='List projects')
+    parser_projects.add_argument('-l', '--limit', metavar='number of projects per page', action='store')
     parser_projects.set_defaults(func='list_projects')
 
     # Project details command
@@ -107,7 +108,7 @@ def arg_parser():
     parser_cache.set_defaults(func='cache_statistics')
 
     # Version commmand
-    parser_version = subparsers.add_parser('version', help='Display version')
+    subparsers.add_parser('version', help='Display version')
 
     return parser
 

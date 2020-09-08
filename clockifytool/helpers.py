@@ -55,6 +55,26 @@ def time_entry_list(from_date, to_date, clockify, strict=False, verbose=False):
     # Get yesterday's time entries
     time_entries = clockify.entries(start=from_date + 'T00:00:00', end=to_date + 'T23:59:59', strict=strict)
 
+    # Augment data
+    for entry in time_entries:
+        if entry['projectId'] is not None:
+            project = clockify.cache.get_cached_entry(entry['projectId'])
+
+            if project is None:
+                project = clockify.get_project(entry['projectId'])
+                clockify.cache.create(project)
+
+            entry['project'] = {'name': project['name'], 'id': entry['projectId']}
+
+        if entry['taskId'] is not None:
+            task = clockify.cache.get_cached_entry(entry['taskId'])
+
+            if task is None:
+                task = clockify.get_task(entry['projectId'], entry['taskId'])
+                clockify.cache.create(task, task['id'], 'task')
+
+            entry['task'] = {'name': task['name'], 'id': entry['taskId']}
+
     if time_entries:
         sum = 0
 
@@ -309,3 +329,19 @@ def describe_periods():
         first = False
 
     return description
+
+def cache_workspace_tasks(clockify):
+    print("Caching project tasks (this can take awhile)...")
+
+    # Cycle through each project in the workspace
+    for project in clockify.projects(limit=1000):
+        # Get cached project tasks (or get project tasks via API)
+        project_tasks = clockify.cache.get_cached_entry(project['id'], 'project-tasks')
+
+        if project_tasks is None:
+            project_tasks = clockify.project_tasks(project['id'])
+            clockify.cache.create(project_tasks, project['id'], 'project-tasks')
+
+        # Cache project's tasks
+        for task in project_tasks:
+            clockify.cache.create(task, task['id'], 'task')

@@ -278,6 +278,9 @@ specified, however, then the specified start time will be used.
 
 ### Updating a time entry
 
+NOTE: This functionality is currently disabled as it needs to be updated to
+work with the new API.
+
 The `update` (or `u`) command is used to update an existing time entry.
 
 Help for the update command:
