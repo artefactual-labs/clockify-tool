@@ -16,6 +16,8 @@ Install via PyPi:
 
     pip install clockifytool
 
+(Make sure `$HOME/.local/bin/cft` is added your PATH environment variable.)
+
 ...Or clone this repo, change into the repo directory, then enter the following
 command:
 
