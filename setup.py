@@ -12,7 +12,7 @@ with open("README.md") as f:
 setup(
     name="clockifytool",
     packages=["clockifytool"],
-    version="0.0.3",
+    version="0.1.0",
     license="MIT",
     description="Tool to list, create, and delete time entries in Clockify",
     author="Mike Cantelon",
